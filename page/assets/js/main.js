@@ -1,5 +1,5 @@
 const sequentialReveal = () => {
-    const elements = document.querySelectorAll(".iUp");
+    const elements = document.querySelectorAll("[data-animate]");
     if (!elements.length) return;
 
     const prefersReducedMotion = window.matchMedia &&
@@ -15,9 +15,9 @@ const sequentialReveal = () => {
     });
 };
 
-const setPanelBackground = () => {
-    const panel = document.querySelector("#panel");
-    if (!panel) return;
+const setBackgroundArtwork = () => {
+    const body = document.body;
+    if (!body) return;
 
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight || 1;
@@ -25,7 +25,7 @@ const setPanelBackground = () => {
 
     const url = screenRatio > 1.5 ? "https://art.lzzz.ink" : "https://art.lzzz.ink/m";
 
-    panel.style.background = `url('${url}') center center / cover no-repeat #020617`;
+    body.style.setProperty("--hero-image", `url('${url}')`);
 };
 
 const updateDescription = data => {
@@ -50,9 +50,9 @@ const fetchArtwork = async () => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    setPanelBackground();
+    setBackgroundArtwork();
     fetchArtwork();
     sequentialReveal();
 });
 
-window.addEventListener("resize", setPanelBackground);
+window.addEventListener("resize", setBackgroundArtwork);
