@@ -2,37 +2,35 @@
 <html lang="en-US">
 
 <head>
-    <!-- Meta -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="Xarth">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Xarth" />
+    <meta name="description" content="Xarth Leo's personal homepage. Capturing the Fireflies of Inspiration." />
     <title>Xarth's Homepage</title>
-    <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="assets/css/onlinewebfonts.css" />
-    <link rel="stylesheet" type="text/css" href="assets/css/vno.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/iconfont.css">
-    <!-- ICON -->
-    <link rel="icon" href="favicon.ico">
+
+    <link rel="preload" href="assets/css/vno.css" as="style" />
+    <link rel="stylesheet" href="assets/css/onlinewebfonts.css" />
+    <link rel="stylesheet" href="assets/css/vno.css" />
+    <link rel="stylesheet" href="assets/css/iconfont.css" />
+
+    <link rel="icon" href="favicon.ico" />
 </head>
 
 <body>
-    <!-- Mobile Menu -->
-    <span class="mobile btn-mobile-menu">
-        <i class="social iconfont icon-list btn-mobile-menu__icon"></i>
-        <i class="social iconfont icon-angleup btn-mobile-close__icon hidden"></i>
-    </span>
+    <button class="mobile btn-mobile-menu" type="button" aria-label="Toggle navigation">
+        <i class="social iconfont icon-list btn-mobile-menu__icon" aria-hidden="true"></i>
+        <i class="social iconfont icon-angleup btn-mobile-close__icon hidden" aria-hidden="true"></i>
+    </button>
 
-    <!-- Header -->
     <header id="panel" class="panel-cover">
         <div class="panel-main">
             <div class="panel-main__inner panel-inverted">
                 <div class="panel-main__content">
-
-                    <!-- Info -->
                     <div class="ih-item circle effect right_to_left">
-                        <a href="#" class="blog-button">
+                        <a href="#" class="blog-button" aria-label="Profile">
                             <div class="img">
-                                <img src="assets/images/tx.jpg" alt="img" class="js-avatar iUp profilepic">
+                                <img src="assets/images/tx.jpg" alt="Portrait of Xarth" class="js-avatar iUp profilepic"
+                                    loading="lazy" />
                             </div>
                             <div class="info iUp">
                                 <div class="info-back">
@@ -43,50 +41,49 @@
                         </a>
                     </div>
 
-                    <!-- Title -->
                     <h1 class="panel-cover__title panel-title iUp">
                         <a href="#" title="Xarth's Homepage">Xarth Leo</a>
                     </h1>
 
-                    <!-- Page Subtitle -->
-                    <p class="panel-cover__subtitle panel-subtitle iUp">Capturing the Fireflies of Inspiration</p>
+                    <p class="panel-cover__subtitle panel-subtitle iUp">
+                        Capturing the Fireflies of Inspiration
+                    </p>
 
-                    <!-- Dividers -->
                     <hr class="panel-cover__divider iUp" />
 
-                    <!-- Page Description -->
                     <p id="description" class="panel-cover__description iUp">
                         Don't look at me anymore.....<br />
                         <strong>-「Xarth」</strong>
                     </p>
 
-                    <!-- Navigation -->
                     <div class="navigation-wrapper iUp">
-                        <nav class="cover-navigation cover-navigation--primary">
+                        <nav class="cover-navigation cover-navigation--primary" aria-label="Primary">
                             <ul class="navigation">
                                 <li class="navigation__item">
                                     <a href="https://lzzz.ink" class="blog-button">Home</a>
                                 </li>
                                 <li class="navigation__item">
-                                    <a href="/Aminoac" class="blog-button" target="_blank">Aminoac Lang</a>
+                                    <a href="/Aminoac" class="blog-button" target="_blank" rel="noreferrer">Aminoac
+                                        Lang</a>
                                 </li>
                                 <li class="navigation__item">
-                                    <a href="404.html" class="blog-button" target="_blank">404 Site</a>
+                                    <a href="404.html" class="blog-button" target="_blank" rel="noreferrer">404 Site</a>
                                 </li>
                             </ul>
                         </nav>
-                        <nav class="cover-navigation navigation--social">
+
+                        <nav class="cover-navigation navigation--social" aria-label="Social">
                             <ul class="navigation">
-                                <!-- Social Links -->
                                 <li class="navigation__item">
-                                    <a href="https://github.com/Xarth-Mai" title="Github" target="_blank">
-                                        <i class='social iconfont icon-github'></i>
+                                    <a href="https://github.com/Xarth-Mai" title="Github" target="_blank"
+                                        rel="noreferrer">
+                                        <i class="social iconfont icon-github" aria-hidden="true"></i>
                                         <span class="label">Github</span>
                                     </a>
                                 </li>
                                 <li class="navigation__item">
                                     <a href="mailto:g@lzzz.ink" title="Email">
-                                        <i class='social iconfont icon-email'></i>
+                                        <i class="social iconfont icon-email" aria-hidden="true"></i>
                                         <span class="label">Email</span>
                                     </a>
                                 </li>
@@ -96,23 +93,21 @@
                 </div>
             </div>
 
-            <!-- Overlay -->
-            <div class="panel-cover--overlay cover-slate"></div>
+            <div class="panel-cover--overlay cover-slate" aria-hidden="true"></div>
         </div>
 
-        <!-- Copyright Information -->
-        <div class="remark iUp">
-            <p class="power">Powered By
-                <a href="https://github.com/Xarth-Mai" target="_blank">Xarth-Mai</a> And
-                <a href="https://cloudflare.com/" target="_blank">Cloudflare</a> And
-                <a href="https://github.com/" target="_blank">Github</a> And
-                <a href="https://bing.com/" target="_blank">Bing</a>
+        <footer class="remark iUp">
+            <p class="power">
+                Powered by
+                <a href="https://github.com/Xarth-Mai" target="_blank" rel="noreferrer">Xarth-Mai</a>,
+                <a href="https://cloudflare.com/" target="_blank" rel="noreferrer">Cloudflare</a>,
+                <a href="https://github.com/" target="_blank" rel="noreferrer">Github</a>,
+                <a href="https://bing.com/" target="_blank" rel="noreferrer">Bing</a>
             </p>
-        </div>
+        </footer>
     </header>
 
-    <!-- Main JS -->
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js" defer></script>
 </body>
 
 </html>
