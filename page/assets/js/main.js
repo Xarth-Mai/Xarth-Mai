@@ -1,4 +1,3 @@
-// 定义 iUp 对象
 const iUp = (() => {
     let time = 0;
     const duration = 150;
@@ -7,18 +6,21 @@ const iUp = (() => {
         time = 0;
     };
 
-    const up = (element) => {
+    const up = element => {
+        if (!element) return;
         setTimeout(() => {
             element.classList.add("up");
         }, time);
         time += duration;
     };
 
-    const down = (element) => {
+    const down = element => {
+        if (!element) return;
         element.classList.remove("up");
     };
 
-    const toggle = (element) => {
+    const toggle = element => {
+        if (!element) return;
         setTimeout(() => {
             element.classList.toggle("up");
         }, time);
@@ -33,57 +35,95 @@ const iUp = (() => {
     };
 })();
 
-// DOMContentLoaded 事件
-document.addEventListener('DOMContentLoaded', () => {
-    // 设置背景图片
-    const panel = document.querySelector('#panel');
+const setPanelBackground = () => {
+    const panel = document.querySelector("#panel");
+    if (!panel) return;
+
     const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
+    const screenHeight = window.innerHeight || 1;
     const screenRatio = screenWidth / screenHeight;
 
-    let url;
-    if (screenRatio > 1.5) {
-        url = "https://art.lzzz.ink";
-    } else {
-        url = "https://art.lzzz.ink/m";
-    }
+    const url = screenRatio > 1.5 ? "https://art.lzzz.ink" : "https://art.lzzz.ink/m";
 
     panel.style.background = `url('${url}') center center no-repeat #666`;
     panel.style.backgroundSize = "cover";
+};
 
-    // 获取图片数据
-    const xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-        if (this.status === 200) {
-            const res = JSON.parse(this.responseText);
-            document.getElementById('description').innerHTML = `${res.title}<br/><strong>「${res.copyright}」</strong>`;
-        }
-    };
-    xhr.open("GET", "https://art.lzzz.ink/e", true);
-    xhr.send();
+const updateDescription = data => {
+    const descriptionElement = document.getElementById("description");
+    if (!descriptionElement || !data) return;
 
-    // 初始化点赞按钮
+    const title = data.title || "Don't look at me anymore.....";
+    const author = data.copyright || "Xarth";
+
+    descriptionElement.innerHTML = `${title}<br/><strong>「${author}」</strong>`;
+};
+
+const fetchArtwork = () => {
+    fetch("https://art.lzzz.ink/e")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then(updateDescription)
+        .catch(() => {
+            // 静默失败，保留默认文案
+        });
+};
+
+const initAnimations = () => {
+    const prefersReducedMotion = window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) {
+        document.querySelectorAll(".iUp").forEach(element => {
+            element.classList.add("up");
+        });
+        return;
+    }
+
     const iUpElements = document.querySelectorAll(".iUp");
+    iUp.clean();
     iUpElements.forEach(element => {
         iUp.up(element);
     });
+};
 
-    // 图片加载完成后显示头像
+const initAvatar = () => {
     const avatarElement = document.querySelector(".js-avatar");
-    avatarElement.addEventListener('load', () => {
+    if (!avatarElement) return;
+
+    if (avatarElement.complete) {
         avatarElement.classList.add("show");
-    });
+    } else {
+        avatarElement.addEventListener("load", () => {
+            avatarElement.classList.add("show");
+        });
+    }
+};
 
-    // 移动设备菜单按钮点击事件
-    const btnMobileMenu = document.querySelector('.btn-mobile-menu__icon');
-    const navigationWrapper = document.querySelector('.navigation-wrapper');
+const initMobileMenu = () => {
+    const btnMobileMenu = document.querySelector(".btn-mobile-menu__icon");
+    const navigationWrapper = document.querySelector(".navigation-wrapper");
 
-    btnMobileMenu.addEventListener('click', () => {
-        navigationWrapper.classList.toggle('visible');
-        navigationWrapper.classList.toggle('animated');
-        navigationWrapper.classList.toggle('bounceInDown');
-        btnMobileMenu.classList.toggle('icon-list');
-        btnMobileMenu.classList.toggle('icon-angleup');
-        btnMobileMenu.classList.toggle('fadeIn');
+    if (!btnMobileMenu || !navigationWrapper) return;
+
+    btnMobileMenu.addEventListener("click", () => {
+        navigationWrapper.classList.toggle("visible");
+        navigationWrapper.classList.toggle("animated");
+        navigationWrapper.classList.toggle("bounceInDown");
+        btnMobileMenu.classList.toggle("icon-list");
+        btnMobileMenu.classList.toggle("icon-angleup");
+        btnMobileMenu.classList.toggle("fadeIn");
     });
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    setPanelBackground();
+    fetchArtwork();
+    initAnimations();
+    initAvatar();
+    initMobileMenu();
 });
