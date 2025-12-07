@@ -10,10 +10,9 @@ import (
 const SOCK_PATH = "/run/xarth-mai/app.sock"
 
 func main() {
-	// http hello world
 	if err := os.RemoveAll(SOCK_PATH); err != nil {
 		fmt.Printf("Error removing old socket: %v\n", err)
-    }
+	}
 
 	listener, err := net.Listen("unix", SOCK_PATH)
 	if err != nil {
