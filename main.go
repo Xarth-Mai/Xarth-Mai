@@ -7,6 +7,7 @@ import (
 	"os"
 )
 
+const VERSION = "0.0.1"
 const SOCK_PATH = "/run/xarth-mai/app.sock"
 
 func main() {
@@ -23,6 +24,11 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello World")
+	})
+
+	// api/version -> json {version: $VERSION}
+	http.HandleFunc("/api/version", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "{version: %s}", VERSION)
 	})
 
 	fmt.Printf("Listening on %s\n", SOCK_PATH)
