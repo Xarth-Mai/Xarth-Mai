@@ -26,9 +26,8 @@ func main() {
 		fmt.Fprintf(w, "Hello World")
 	})
 
-	// api/version -> json {version: $VERSION}
 	http.HandleFunc("/api/version", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "{version: %s}", VERSION)
+		fmt.Fprintf(w, "{\"version\": \"%s\"}", VERSION)
 	})
 
 	fmt.Printf("Listening on %s\n", SOCK_PATH)
