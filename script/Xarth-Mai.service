@@ -1,0 +1,18 @@
+[Unit]
+Description=Xarth-Mai Golang Backend
+After=network.target
+
+[Service]
+ExecStart=/opt/Xarth-Mai/Xarth-Mai
+WorkingDirectory=/opt/Xarth-Mai
+Restart=always
+User=xarth-svc
+Group=nginx
+RuntimeDirectory=xarth-mai
+RuntimeDirectoryMode=0750
+UMask=0007
+ProtectSystem=full
+ReadWritePaths=/run/xarth-mai
+
+[Install]
+WantedBy=multi-user.target
