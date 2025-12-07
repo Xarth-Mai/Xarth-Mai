@@ -1,7 +1,33 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net"
+	"net/http"
+	"os"
+)
+
+const SOCK_PATH = "/run/xarth-mai/app.sock"
 
 func main() {
-	fmt.Println("Hello, World!")
+	// http hello world
+	if err := os.RemoveAll(SOCK_PATH); err != nil {
+		fmt.Printf("Error removing old socket: %v\n", err)
+    }
+
+	listener, err := net.Listen("unix", SOCK_PATH)
+	if err != nil {
+		fmt.Printf("Error listening on socket: %v\n", err)
+		return
+	}
+	defer listener.Close()
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello World")
+	})
+
+	fmt.Printf("Listening on %s\n", SOCK_PATH)
+	if err := http.Serve(listener, nil); err != nil {
+		fmt.Printf("Error serving: %v\n", err)
+	}
 }
