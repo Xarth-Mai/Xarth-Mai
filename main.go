@@ -22,9 +22,9 @@ func main() {
 	}
 	defer listener.Close()
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello World")
-	})
+	frontend := http.FileServer(http.Dir("/lzzz.ink"))
+
+	http.HandleFunc("/", frontend.ServeHTTP)
 
 	http.HandleFunc("/api/version", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "{\"version\": \"%s\"}", VERSION)
