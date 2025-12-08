@@ -5,6 +5,8 @@ import (
 	"net"
 	"net/http"
 	"os"
+
+	"github.com/Xarth-Mai/handles"
 )
 
 const VERSION = "0.0.1"
@@ -29,10 +31,13 @@ func main() {
 	// serve frontend
 	http.Handle("/", http.FileServer(http.Dir("./public")))
 
-	// serve api
+	// serve api/version
 	http.HandleFunc("/api/version", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "{\"version\": \"%s\"}", VERSION)
 	})
+
+	// serve other api
+	http.HandleFunc("/api", handles.Router)
 
 	// serve and print log
 	fmt.Printf("Listening on %s\n", SOCK_PATH)
