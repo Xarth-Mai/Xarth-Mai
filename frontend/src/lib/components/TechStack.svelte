@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { api } from "../../api";
-    import type { TechStackItem } from "../../types";
+    import { api } from "../api";
+    import type { TechStackItem } from "../types";
 
     let stack: TechStackItem[] = $state([]);
 
@@ -44,18 +44,18 @@
 <style>
     .stack-card {
         height: 100%;
-        padding: var(--spacing-lg);
+        padding: var(--space-lg);
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-md);
+        gap: var(--space-md);
     }
 
     .tech-row {
         display: flex;
         align-items: center;
-        gap: var(--spacing-sm);
+        gap: var(--space-sm);
         font-size: 14px;
-        margin-bottom: var(--spacing-sm);
+        margin-bottom: var(--space-sm);
     }
 
     .tech-name {
@@ -79,7 +79,7 @@
     .tech-percent {
         min-width: 30px;
         text-align: right;
-        color: var(--text-dim);
+        color: var(--color-text-secondary);
         font-size: 12px;
     }
 

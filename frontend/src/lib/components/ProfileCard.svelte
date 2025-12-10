@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { UserStatus } from "../../types";
+    import type { UserStatus } from "../types";
 
     // Static Props
     export let username: string = "";
@@ -59,25 +59,25 @@
 <style>
     .profile-card {
         height: 100%;
-        padding: var(--spacing-lg);
+        padding: var(--space-lg);
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: var(--spacing-sm);
+        gap: var(--space-sm);
     }
 
     .avatar-container {
         position: relative;
-        width: var(--avatar-size);
-        height: var(--avatar-size);
+        width: var(--layout-avatar-size);
+        height: var(--layout-avatar-size);
     }
 
     .avatar-sk {
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        border: 2px solid var(--border-color); /* Match border of real img */
+        border: 2px solid var(--color-border); /* Match border of real img */
         box-sizing: border-box;
     }
 
@@ -85,14 +85,14 @@
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        border: 2px solid var(--border-color);
+        border: 2px solid var(--color-border);
         object-fit: cover;
         transition: opacity 0.3s ease;
     }
 
     .avatar-img.hidden {
         opacity: 0;
-        position: absolute; /* Take out of flow to let skeleton sit there? Actually just opacity is enough if container is sized */
+        position: absolute;
         top: 0;
         left: 0;
     }
@@ -104,7 +104,7 @@
         width: 16px;
         height: 16px;
         border-radius: 50%;
-        border: 2px solid var(--bg-color);
+        border: 2px solid var(--color-bg-base);
         transition:
             background-color 0.3s,
             box-shadow 0.3s;
@@ -137,13 +137,13 @@
     .social-links {
         margin-top: auto;
         display: flex;
-        gap: var(--spacing-sm);
+        gap: var(--space-sm);
     }
 
     .icon-btn {
         background: rgba(255, 255, 255, 0.05);
         border: none;
-        color: var(--text-dim);
+        color: var(--color-text-secondary);
         padding: 8px 16px;
         border-radius: 20px;
         cursor: pointer;
@@ -152,6 +152,6 @@
 
     .icon-btn:hover {
         background: rgba(255, 255, 255, 0.1);
-        color: var(--text-main);
+        color: var(--color-text-primary);
     }
 </style>
