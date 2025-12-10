@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Xarth-Mai/handles"
+	"github.com/Xarth-Mai/backend/handles"
 )
 
 const VERSION = "0.0.1"
