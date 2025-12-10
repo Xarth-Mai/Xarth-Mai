@@ -1,24 +1,38 @@
 <script lang="ts">
-    // Mock Contribution Data (Last 52 weeks would be huge, mocking a smaller grid for visual test)
-    const weeks = 20;
-    const days = 7;
+    import { api } from "../../api";
 
-    // 0-4 intensity
-    const getRandomLevel = () => Math.floor(Math.random() * 5);
-    const contributions = Array.from({ length: weeks * days }, getRandomLevel);
+    let contributions: number[] = $state([]);
+
+    $effect(() => {
+        api.getContributions().then((data) => (contributions = data.levels));
+    });
 </script>
 
 <div class="heatmap-grid">
-    {#each contributions as level}
-        <div class="day level-{level}"></div>
-    {/each}
+    {#if contributions.length > 0}
+        {#each contributions as level}
+            <div class="day level-{level}"></div>
+        {/each}
+    {:else}
+        {#each Array(140) as _}
+            <div class="day skeleton"></div>
+        {/each}
+    {/if}
 </div>
 
 <div class="legend">
     <span>Less</span>
-    <div class="day level-0"></div>
-    <div class="day level-2"></div>
-    <div class="day level-4"></div>
+    {#if contributions.length > 0}
+        <div class="day level-0"></div>
+        <div class="day level-1"></div>
+        <div class="day level-2"></div>
+        <div class="day level-3"></div>
+        <div class="day level-4"></div>
+    {:else}
+        {#each Array(5) as _}
+            <div class="day skeleton"></div>
+        {/each}
+    {/if}
     <span>More</span>
 </div>
 

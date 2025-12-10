@@ -22,6 +22,12 @@
   --golden-ratio-left: 38.2%;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   background-color: var(--bg-color);
   background-image:
@@ -33,6 +39,8 @@ body {
   margin: 0;
   display: flex;
   justify-content: center;
+  /* Ensure centering vertically if space allows, but safe for scroll */
+  align-items: center;
   min-height: 100vh;
   padding: 40px 20px;
   position: relative;
@@ -104,6 +112,28 @@ body::before {
   /* Top most, but underneath specific interactions if needed, adjust z-index strategy */
   mix-blend-mode: overlay;
   /* Optional: nicer blending */
+}
+
+/* Skeleton Loading */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+  /* Default radius */
 }
 
 /* Fix mobile overflow for right panel content */
