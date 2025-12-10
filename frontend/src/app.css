@@ -1,0 +1,55 @@
+:root {
+  --bg-color: #050505;
+  --card-bg: rgba(30, 30, 30, 0.5);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --accent-color: #ff6b00; /* Neon Orange */
+  --accent-dim: rgba(255, 107, 0, 0.2);
+  --text-main: #e5e5e5;
+  --text-dim: #737373;
+  --glass-blur: blur(12px);
+  --gap: 16px;
+  --radius: 24px;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color); 
+}
+::-webkit-scrollbar-thumb {
+  background: #333; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+/* Utilities */
+.glass-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.glass-panel:hover {
+  border-color: var(--accent-dim);
+}
+
+h1, h2, h3 { margin: 0; font-weight: 600; }
+p { margin: 0; color: var(--text-dim); }
