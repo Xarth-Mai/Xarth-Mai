@@ -4,16 +4,24 @@
   import TechStack from "./lib/components/TechStack.svelte";
   import ActivityFeed from "./lib/components/ActivityFeed.svelte";
 
-  // Mock Data (will be replaced by fetch)
+  import { api } from "./api";
+  import type { UserStatus } from "./types";
 
-  const user = {
+  // Static Configuration
+  const staticUser = {
     username: "Xarth",
-    bio: "Full-stack Dev / Rust & Svelte",
-    status: "coding",
   };
 
-  let mouseX = 0;
-  let mouseY = 0;
+  let status: UserStatus | null = $state(null);
+  let quote = $state("");
+
+  $effect(() => {
+    api.getStatus().then((data) => (status = data));
+    api.getQuote().then((data) => (quote = data.quote));
+  });
+
+  let mouseX = $state(0);
+  let mouseY = $state(0);
 
   function handleMouseMove(event: MouseEvent) {
     mouseX = event.clientX;
@@ -33,7 +41,8 @@
   <!-- Left Panel: Profile, Stats, Stack -->
   <div class="left-panel glass-panel">
     <div class="profile-section">
-      <ProfileCard {user} />
+      <!-- Profile is always rendered (static), status is async -->
+      <ProfileCard username={staticUser.username} {quote} {status} />
     </div>
 
     <div class="stats-section">
@@ -57,7 +66,7 @@
   .dashboard-container {
     display: flex;
     gap: var(--spacing-md);
-    max-width: 1200px;
+    max-width: 1500px;
     width: 100%;
     align-items: flex-start;
   }
@@ -68,12 +77,16 @@
     flex-direction: column;
     gap: var(--spacing-lg);
     padding: var(--spacing-lg);
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
   }
 
   .right-panel {
     flex: 1;
     padding: var(--spacing-lg);
     min-height: 600px; /* Ensure some height match */
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
   }
 
   .stats-section,
@@ -93,11 +106,8 @@
     .right-panel {
       flex: none;
       width: 100%;
-    }
-
-    .left-panel {
-      width: 100%; /* Ensure full width on mobile */
-      box-sizing: border-box; /* Crucial for padding */
+      max-height: none;
+      overflow-y: visible;
     }
   }
 </style>

@@ -1,28 +1,43 @@
 <script lang="ts">
-    const stack = [
-        { name: "Rust", color: "#dea584", percent: 40 },
-        { name: "Svelte", color: "#ff3e00", percent: 30 },
-        { name: "TS", color: "#3178c6", percent: 20 },
-        { name: "Go", color: "#00add8", percent: 10 },
-    ];
+    import { api } from "../../api";
+    import type { TechStackItem } from "../../types";
+
+    let stack: TechStackItem[] = $state([]);
+
+    $effect(() => {
+        api.getTechStack().then((data) => (stack = data));
+    });
 </script>
 
 <div class="glass-panel stack-card">
-    <h3>Tech Stack</h3>
+    <h3>Top Technologies</h3>
 
-    <div class="bars-container">
-        {#each stack as tech}
-            <div class="tech-row">
-                <span class="tech-name">{tech.name}</span>
-                <div class="bar-bg">
-                    <div
-                        class="bar-fill"
-                        style="width: {tech.percent}%; background-color: {tech.color};"
-                    ></div>
-                </div>
-                <span class="tech-pct">{tech.percent}%</span>
+    <div class="content-wrapper">
+        <div class="real-content" class:open={stack.length > 0}>
+            <div class="inner">
+                {#each stack as tech}
+                    <div class="tech-row">
+                        <span class="tech-name">{tech.name}</span>
+                        <div class="progress-bar">
+                            <div
+                                class="progress-fill"
+                                style="width: {tech.percent}%; background-color: {tech.color};"
+                            ></div>
+                        </div>
+                        <span class="tech-percent">{tech.percent}%</span>
+                    </div>
+                {/each}
             </div>
-        {/each}
+        </div>
+
+        {#if stack.length === 0}
+            <!-- Skeleton Stack (Only visible when no stack) -->
+            <div class="tech-skeleton">
+                {#each Array(4) as _}
+                    <div class="skeleton bar-sk"></div>
+                {/each}
+            </div>
+        {/if}
     </div>
 </div>
 
@@ -47,23 +62,55 @@
         min-width: 50px;
     }
 
-    .bar-bg {
-        flex-grow: 1;
-        height: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 3px;
+    .progress-bar {
+        flex: 1;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
         overflow: hidden;
     }
 
-    .bar-fill {
+    .progress-fill {
         height: 100%;
-        border-radius: 3px;
+        border-radius: 4px;
+        transition: width 1s ease-out;
     }
 
-    .tech-pct {
-        font-size: 12px;
-        color: var(--text-dim);
+    .tech-percent {
         min-width: 30px;
         text-align: right;
+        color: var(--text-dim);
+        font-size: 12px;
+    }
+
+    .tech-skeleton {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .bar-sk {
+        width: 100%;
+        height: 12px;
+        border-radius: 6px;
+    }
+
+    .content-wrapper {
+        min-height: 96px;
+        position: relative;
+    }
+
+    .real-content {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.5s ease-out; /* Smooth CSS height transition */
+    }
+
+    .real-content.open {
+        grid-template-rows: 1fr;
+    }
+
+    .inner {
+        min-height: 0; /* Required for grid transition */
     }
 </style>

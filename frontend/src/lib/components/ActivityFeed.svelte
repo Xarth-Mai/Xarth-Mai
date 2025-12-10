@@ -1,37 +1,44 @@
 <script lang="ts">
-    const activities = [
-        {
-            type: "push",
-            repo: "Xarth-Mai",
-            desc: "Pushed 3 commits to main",
-            time: "2h ago",
-        },
-        {
-            type: "pr",
-            repo: "svelte",
-            desc: "Opened PR #1042: Fix flicker",
-            time: "5h ago",
-        },
-        {
-            type: "star",
-            repo: "bun",
-            desc: "Starred jarred/bun",
-            time: "1d ago",
-        },
-    ];
+    import { api } from "../../api";
+    import type { ActivityItem } from "../../types";
+
+    let activities: ActivityItem[] = $state([]);
+
+    $effect(() => {
+        api.getActivityFeed().then((data) => (activities = data));
+    });
 </script>
 
 <ul class="activity-list">
-    {#each activities as act}
-        <li class="activity-item">
-            <div class="icon-box type-{act.type}"></div>
-            <div class="content">
-                <div class="repo">{act.repo}</div>
-                <div class="desc">{act.desc}</div>
-            </div>
-            <div class="time">{act.time}</div>
-        </li>
-    {/each}
+    {#if activities.length > 0}
+        {#each activities as activity}
+            <li class="activity-item">
+                <div class="icon-box type-{activity.type}"></div>
+                <div class="content">
+                    <div class="repo">{activity.repo}</div>
+                    <div class="desc">{activity.desc}</div>
+                </div>
+                <div class="time">{activity.time}</div>
+            </li>
+        {/each}
+    {:else}
+        <!-- Skeleton Feed -->
+        {#each Array(3) as _}
+            <li class="activity-item">
+                <div class="icon-box skeleton"></div>
+                <div class="content">
+                    <div
+                        class="title skeleton"
+                        style="width: 60%; height: 16px; margin-bottom: 8px;"
+                    ></div>
+                    <div
+                        class="desc skeleton"
+                        style="width: 80%; height: 12px;"
+                    ></div>
+                </div>
+            </li>
+        {/each}
+    {/if}
 </ul>
 
 <style>
