@@ -9,43 +9,77 @@
     });
 </script>
 
-<ul class="activity-list">
-    {#if activities.length > 0}
-        {#each activities as activity}
-            <li class="activity-item">
-                <div class="icon-box type-{activity.type}"></div>
-                <div class="content">
-                    <div class="repo">{activity.repo}</div>
-                    <div class="desc">{activity.desc}</div>
-                </div>
-                <div class="time">{activity.time}</div>
-            </li>
-        {/each}
-    {:else}
-        <!-- Skeleton Feed -->
-        {#each Array(3) as _}
-            <li class="activity-item">
-                <div class="icon-box skeleton"></div>
-                <div class="content">
-                    <div
-                        class="title skeleton"
-                        style="width: 60%; height: 16px; margin-bottom: 8px;"
-                    ></div>
-                    <div
-                        class="desc skeleton"
-                        style="width: 80%; height: 12px;"
-                    ></div>
-                </div>
-            </li>
-        {/each}
+<div class="activity-wrapper">
+    <!-- Real Content with CSS grid transition -->
+    <ul class="activity-list real-content" class:open={activities.length > 0}>
+        <div class="inner">
+            {#each activities as activity}
+                <li class="activity-item">
+                    <div class="icon-box type-{activity.type}"></div>
+                    <div class="content">
+                        <div class="repo">{activity.repo}</div>
+                        <div class="desc">{activity.desc}</div>
+                    </div>
+                    <div class="time">{activity.time}</div>
+                </li>
+            {/each}
+        </div>
+    </ul>
+
+    <!-- Skeleton (only visible when empty) -->
+    {#if activities.length === 0}
+        <ul class="activity-list skeleton-list">
+            {#each Array(9) as _}
+                <li class="activity-item">
+                    <div class="icon-box skeleton"></div>
+                    <div class="content">
+                        <div
+                            class="title skeleton"
+                            style="width: 60%; height: 16px; margin-bottom: 8px;"
+                        ></div>
+                        <div
+                            class="desc skeleton"
+                            style="width: 80%; height: 12px;"
+                        ></div>
+                    </div>
+                </li>
+            {/each}
+        </ul>
     {/if}
-</ul>
+</div>
 
 <style>
+    .activity-wrapper {
+        position: relative;
+    }
+
     .activity-list {
         list-style: none;
         padding: 0;
         margin: var(--spacing-md) 0 0 0;
+    }
+
+    /* CSS Grid Height Transition */
+    .real-content {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.5s ease-out;
+    }
+
+    .real-content.open {
+        grid-template-rows: 1fr;
+    }
+
+    .inner {
+        min-height: 0;
+    }
+
+    .skeleton-list {
+        /* Position absolutely so it doesn't affect layout when real content loads */
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
     }
 
     .activity-item {
