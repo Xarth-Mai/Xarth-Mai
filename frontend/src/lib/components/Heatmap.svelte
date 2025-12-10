@@ -25,7 +25,7 @@
 <style>
     .heatmap-grid {
         display: flex;
-        flex-wrap: wrap; /* Or Grid */
+        flex-wrap: wrap;
         gap: 4px;
         margin-top: 16px;
         /* Simplification: Just a flex wrap box for now, standard GH graph is column-major grid */
@@ -40,22 +40,26 @@
         background-color: rgba(255, 255, 255, 0.05);
     }
 
-    /* Orange Scales */
+    /* Dynamic scales using accent color */
     .level-0 {
         background-color: rgba(255, 255, 255, 0.05);
     }
     .level-1 {
-        background-color: rgba(255, 107, 0, 0.2);
+        background-color: var(--accent-color);
+        opacity: 0.2;
     }
     .level-2 {
-        background-color: rgba(255, 107, 0, 0.4);
+        background-color: var(--accent-color);
+        opacity: 0.4;
     }
     .level-3 {
-        background-color: rgba(255, 107, 0, 0.7);
+        background-color: var(--accent-color);
+        opacity: 0.7;
     }
     .level-4 {
-        background-color: #ff6b00;
-        box-shadow: 0 0 6px #ff6b00;
+        background-color: var(--accent-color);
+        opacity: 1;
+        box-shadow: 0 0 6px var(--accent-color);
     }
 
     .legend {

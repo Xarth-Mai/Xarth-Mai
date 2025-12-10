@@ -38,15 +38,15 @@
     .activity-list {
         list-style: none;
         padding: 0;
-        margin: 16px 0 0 0;
+        margin: var(--spacing-md) 0 0 0;
     }
 
     .activity-item {
         display: flex;
         align-items: center;
-        gap: 16px;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        gap: var(--spacing-md);
+        padding: var(--spacing-sm) 0;
+        border-bottom: 1px solid var(--border-color);
     }
 
     .activity-item:last-child {
@@ -73,6 +73,7 @@
 
     .content {
         flex-grow: 1;
+        min-width: 0; /* Critical for text wrapping in flex container */
     }
     .repo {
         font-weight: 500;
@@ -82,6 +83,8 @@
     .desc {
         font-size: 13px;
         color: var(--text-dim);
+        white-space: normal;
+        overflow-wrap: break-word;
     }
     .time {
         font-size: 12px;

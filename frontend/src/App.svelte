@@ -1,62 +1,103 @@
 <script lang="ts">
-  import Heatmap from './lib/components/Heatmap.svelte';
-  import ProfileCard from './lib/components/ProfileCard.svelte';
-  import TechStack from './lib/components/TechStack.svelte';
-  import ActivityFeed from './lib/components/ActivityFeed.svelte';
+  import Heatmap from "./lib/components/Heatmap.svelte";
+  import ProfileCard from "./lib/components/ProfileCard.svelte";
+  import TechStack from "./lib/components/TechStack.svelte";
+  import ActivityFeed from "./lib/components/ActivityFeed.svelte";
 
   // Mock Data (will be replaced by fetch)
+
   const user = {
     username: "Xarth",
     bio: "Full-stack Dev / Rust & Svelte",
-    status: "coding"
+    status: "coding",
   };
+
+  let mouseX = 0;
+  let mouseY = 0;
+
+  function handleMouseMove(event: MouseEvent) {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+
+    // Update CSS variables on the root or specific container
+    document.documentElement.style.setProperty("--mouse-x", `${mouseX}px`);
+    document.documentElement.style.setProperty("--mouse-y", `${mouseY}px`);
+  }
 </script>
 
-<main class="bento-grid">
-  <div class="profile-area">
-    <ProfileCard {user} />
+<svelte:window onmousemove={handleMouseMove} />
+
+<div class="cursor-glow" style="left: {mouseX}px; top: {mouseY}px"></div>
+
+<main class="dashboard-container">
+  <!-- Left Panel: Profile, Stats, Stack -->
+  <div class="left-panel glass-panel">
+    <div class="profile-section">
+      <ProfileCard {user} />
+    </div>
+
+    <div class="stats-section">
+      <h3>Contribution Activity</h3>
+      <Heatmap />
+    </div>
+
+    <div class="stack-section">
+      <TechStack />
+    </div>
   </div>
 
-  <div class="heatmap-area glass-panel">
-    <h3>Contribution Activity</h3>
-    <Heatmap />
-  </div>
-
-  <div class="stack-area">
-    <TechStack />
-  </div>
-
-  <div class="feed-area glass-panel">
+  <!-- Right Panel: Activity Feed -->
+  <div class="right-panel glass-panel">
     <h3>Latest Activity</h3>
     <ActivityFeed />
   </div>
 </main>
 
 <style>
-  .bento-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, minmax(180px, auto));
-    gap: var(--gap);
+  .dashboard-container {
+    display: flex;
+    gap: var(--spacing-md);
     max-width: 1200px;
     width: 100%;
+    align-items: flex-start;
   }
 
-  /* Grid Areas (Mobile First approach recommended, but starting with Desktop for visualizing) */
-  .profile-area { grid-column: span 1; grid-row: span 2; }
-  .heatmap-area { grid-column: span 2; grid-row: span 2; padding: 24px; display: flex; flex-direction: column;}
-  .stack-area   { grid-column: span 1; grid-row: span 1; }
-  .feed-area    { grid-column: span 4; grid-row: span 1; padding: 24px; }
+  .left-panel {
+    flex: 0 0 var(--golden-ratio-left);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+  }
+
+  .right-panel {
+    flex: 1;
+    padding: var(--spacing-lg);
+    min-height: 600px; /* Ensure some height match */
+  }
+
+  .stats-section,
+  .stack-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
 
   /* Responsive */
   @media (max-width: 900px) {
-    .bento-grid {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto;
+    .dashboard-container {
+      flex-direction: column;
     }
-    .profile-area, .heatmap-area, .stack-area, .feed-area {
-      grid-column: span 1;
-      grid-row: auto;
+
+    .left-panel,
+    .right-panel {
+      flex: none;
+      width: 100%;
+    }
+
+    .left-panel {
+      width: 100%; /* Ensure full width on mobile */
+      box-sizing: border-box; /* Crucial for padding */
     }
   }
 </style>

@@ -2,9 +2,9 @@
     export let user: { username: string; bio: string; status: string };
 </script>
 
-<div class="glass-panel profile-card">
+<div class="profile-card">
     <div class="avatar-container">
-        <div class="avatar-placeholder"></div>
+        <img src="/avatar.png" alt={user.username} class="avatar-img" />
         <div class="status-dot {user.status}"></div>
     </div>
 
@@ -20,20 +20,20 @@
 <style>
     .profile-card {
         height: 100%;
-        padding: 24px;
+        padding: var(--spacing-lg);
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 16px;
+        gap: var(--spacing-sm);
     }
 
-    .avatar-placeholder {
-        width: 100px;
-        height: 100px;
+    .avatar-img {
+        width: var(--avatar-size);
+        height: var(--avatar-size);
         border-radius: 50%;
-        background: #333;
         border: 2px solid var(--border-color);
+        object-fit: cover;
     }
 
     .avatar-container {
@@ -61,7 +61,7 @@
     .social-links {
         margin-top: auto;
         display: flex;
-        gap: 12px;
+        gap: var(--spacing-sm);
     }
 
     .icon-btn {

@@ -29,18 +29,18 @@
 <style>
     .stack-card {
         height: 100%;
-        padding: 24px;
+        padding: var(--spacing-lg);
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: var(--spacing-md);
     }
 
     .tech-row {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: var(--spacing-sm);
         font-size: 14px;
-        margin-bottom: 12px;
+        margin-bottom: var(--spacing-sm);
     }
 
     .tech-name {
