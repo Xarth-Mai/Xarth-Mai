@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { api } from "../../api";
-    import type { ActivityItem } from "../../types";
+    import { api } from "../api";
+    import type { ActivityItem } from "../types";
 
     let activities: ActivityItem[] = $state([]);
 
@@ -56,7 +56,7 @@
     .activity-list {
         list-style: none;
         padding: 0;
-        margin: var(--spacing-md) 0 0 0;
+        margin: var(--space-md) 0 0 0;
     }
 
     /* CSS Grid Height Transition */
@@ -85,9 +85,9 @@
     .activity-item {
         display: flex;
         align-items: center;
-        gap: var(--spacing-md);
-        padding: var(--spacing-sm) 0;
-        border-bottom: 1px solid var(--border-color);
+        gap: var(--space-md);
+        padding: var(--space-sm) 0;
+        border-bottom: 1px solid var(--color-border);
     }
 
     .activity-item:last-child {
@@ -103,7 +103,7 @@
 
     /* Just color coding types for now, icons later */
     .type-push {
-        border: 1px solid var(--accent-color);
+        border: 1px solid var(--color-accent-primary);
     }
     .type-pr {
         border: 1px solid #a855f7;
@@ -119,16 +119,16 @@
     .repo {
         font-weight: 500;
         font-size: 14px;
-        color: var(--text-main);
+        color: var(--color-text-primary);
     }
     .desc {
         font-size: 13px;
-        color: var(--text-dim);
+        color: var(--color-text-secondary);
         white-space: normal;
         overflow-wrap: break-word;
     }
     .time {
         font-size: 12px;
-        color: var(--text-dim);
+        color: var(--color-text-secondary);
     }
 </style>

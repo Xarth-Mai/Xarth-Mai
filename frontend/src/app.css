@@ -1,39 +1,70 @@
 :root {
-  --bg-color: #050505;
-  --card-bg: rgba(30, 30, 30, 0.5);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --accent-color: #a78bfa;
-  /* Subtle Purple */
-  --accent-dim: rgba(167, 139, 250, 0.15);
-  --text-main: #e5e5e5;
-  --text-dim: #737373;
-  --glass-blur: blur(12px);
-  --gap: 16px;
-  --radius: 24px;
+  /* --- DESIGN TOKENS --- */
+
+  /* Colors: Backgrounds */
+  --color-bg-base: #050505;
+  --color-bg-card: rgba(30, 30, 30, 0.5);
+  --color-bg-input: rgba(255, 255, 255, 0.05);
+  --color-bg-hover: rgba(255, 255, 255, 0.1);
+
+  /* Colors: Text */
+  --color-text-primary: #e5e5e5;
+  --color-text-secondary: #737373;
+  --color-text-muted: #525252;
+
+  /* Colors: Accents */
+  --color-accent-primary: #a78bfa;
+  /* Soft Purple */
+  --color-accent-secondary: #f472b6;
+  /* Pink */
+  --color-accent-dim: rgba(167, 139, 250, 0.15);
+  /* Dim Purple */
+
+  /* Colors: Borders */
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(167, 139, 250, 0.3);
 
   /* Spacing System */
-  --spacing-xs: 8px;
-  --spacing-sm: 12px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
 
-  /* Dimensions */
-  --avatar-size: 80px;
-  --golden-ratio-left: 38.2%;
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Effects */
+  --effect-glass: blur(12px);
+  --effect-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --effect-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+
+  /* Layout */
+  --layout-max-width: 1500px;
+  --layout-golden-ratio-left: 38.2%;
+  --layout-avatar-size: 80px;
 }
 
+/* Global Styles */
 body {
-  background-color: var(--bg-color);
+  background-color: var(--color-bg-base);
   background-image:
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 107, 0, 0.15), transparent),
     radial-gradient(ellipse 60% 40% at 80% 60%, rgba(120, 80, 200, 0.08), transparent),
     radial-gradient(ellipse 50% 30% at 10% 80%, rgba(0, 150, 200, 0.06), transparent);
-  color: var(--text-main);
+  color: var(--color-text-primary);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   margin: 0;
   display: flex;
   justify-content: center;
-  /* Align to top to prevent jump when content loads */
   align-items: flex-start;
   min-height: 100vh;
   padding: 40px 20px;
@@ -41,14 +72,34 @@ body {
   overflow-x: hidden;
 }
 
+/* Global Spotlight (Injected by action) */
+.spotlight-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 700px;
+  /* Larger */
+  height: 700px;
+  background: radial-gradient(circle,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(167, 139, 250, 0.05) 30%,
+      transparent 70%);
+  transform: translate(-50%, -50%);
+  margin-top: -350px;
+  margin-left: -350px;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+  /* Brighter than overlay */
+  filter: blur(200px);
+  /* Softer */
+}
+
+/* Noise/Texture Overlay */
 body::before {
   content: '';
   position: fixed;
-  box-sizing: content-box;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background:
     radial-gradient(circle at 20% 20%, rgba(255, 107, 0, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(120, 80, 200, 0.03) 0%, transparent 50%);
@@ -62,7 +113,7 @@ body::before {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-color);
+  background: var(--color-bg-base);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -74,42 +125,38 @@ body::before {
   background: #555;
 }
 
-/* Utilities */
+/* Utilities: Glass Panel */
 .glass-panel {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  backdrop-filter: var(--glass-blur);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: var(--effect-glass);
+  box-shadow: var(--effect-shadow-card);
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
   position: relative;
   overflow: hidden;
-  /* Ensure glow doesn't spill out */
   box-sizing: border-box;
-  /* Fix mobile padding issues potentially */
 }
 
-/* Global Spotlight (App.svelte) */
-.cursor-glow {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 800px;
-  /* Large spotlight */
-  height: 800px;
-  background: radial-gradient(circle,
-      rgba(255, 255, 255, 0.05) 0%,
-      transparent 60%);
-  transform: translate(-50%, -50%);
-  /* Center on cursor */
-  pointer-events: none;
-  z-index: 9999;
-  /* Top most, but underneath specific interactions if needed, adjust z-index strategy */
-  mix-blend-mode: overlay;
-  /* Optional: nicer blending */
+.glass-panel:hover {
+  border-color: var(--color-accent-dim);
 }
 
-/* Skeleton Loading */
+/* Utilities: Typography */
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+p {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+/* App Skeleton Loading Animation */
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -128,32 +175,4 @@ body::before {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
   border-radius: 4px;
-  /* Default radius */
-}
-
-/* Fix mobile overflow for right panel content */
-.right-panel .feed-area,
-.right-panel>* {
-  max-width: 100%;
-}
-
-.dashboard-container {
-  overflow-x: hidden;
-  /* Prevent horizontal scroll on body from container */
-}
-
-.glass-panel:hover {
-  border-color: var(--accent-dim);
-}
-
-h1,
-h2,
-h3 {
-  margin: 0;
-  font-weight: 600;
-}
-
-p {
-  margin: 0;
-  color: var(--text-dim);
 }

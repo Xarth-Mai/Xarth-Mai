@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { api } from "../../api";
+    import { api } from "../api";
 
     let contributions: number[] = $state([]);
 
@@ -59,21 +59,21 @@
         background-color: rgba(255, 255, 255, 0.05);
     }
     .level-1 {
-        background-color: var(--accent-color);
+        background-color: var(--color-accent-primary);
         opacity: 0.2;
     }
     .level-2 {
-        background-color: var(--accent-color);
+        background-color: var(--color-accent-primary);
         opacity: 0.4;
     }
     .level-3 {
-        background-color: var(--accent-color);
+        background-color: var(--color-accent-primary);
         opacity: 0.7;
     }
     .level-4 {
-        background-color: var(--accent-color);
+        background-color: var(--color-accent-primary);
         opacity: 1;
-        box-shadow: 0 0 6px var(--accent-color);
+        box-shadow: 0 0 6px var(--color-accent-primary);
     }
 
     .legend {
@@ -82,7 +82,7 @@
         align-items: center;
         gap: 6px;
         font-size: 12px;
-        color: var(--text-dim);
+        color: var(--color-text-secondary);
         justify-content: flex-end;
     }
 </style>
