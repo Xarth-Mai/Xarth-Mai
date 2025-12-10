@@ -29,7 +29,7 @@ func main() {
 	defer listener.Close()
 
 	// serve frontend
-	http.Handle("/", http.FileServer(http.Dir("./public")))
+	http.Handle("/", http.FileServer(http.Dir("./dist")))
 
 	// serve api/version
 	http.HandleFunc("/api/version", func(w http.ResponseWriter, r *http.Request) {
