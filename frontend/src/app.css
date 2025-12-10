@@ -22,12 +22,6 @@
   --golden-ratio-left: 38.2%;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 body {
   background-color: var(--bg-color);
   background-image:
@@ -50,6 +44,7 @@ body {
 body::before {
   content: '';
   position: fixed;
+  box-sizing: content-box;
   top: 0;
   left: 0;
   right: 0;
