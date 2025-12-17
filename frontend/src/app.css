@@ -64,11 +64,11 @@ body {
 
 /* Global Spotlight */
 .spotlight-glow {
-  @apply fixed top-0 left-0 w-[700px] h-[700px] pointer-events-none z-9999;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(167, 139, 250, 0.05) 30%, transparent 70%);
+  @apply fixed top-0 left-0 w-[400px] h-[400px] pointer-events-none z-9999;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(167, 139, 250, 0.1) 50%, transparent 70%);
   transform: translate(-50%, -50%);
-  margin-top: -350px;
-  margin-left: -350px;
+  margin-top: -200px;
+  margin-left: -200px;
   mix-blend-mode: screen;
   filter: blur(200px);
 }
