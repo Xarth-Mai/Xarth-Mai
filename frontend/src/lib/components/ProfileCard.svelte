@@ -20,7 +20,7 @@
 
         <!-- Real Avatar (Hidden until loaded) -->
         <img
-            src="/avatar.png"
+            src="/avatar.webp"
             alt={username}
             class="avatar-img"
             class:hidden={!imageLoaded}
