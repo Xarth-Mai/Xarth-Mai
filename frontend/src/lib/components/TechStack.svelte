@@ -22,7 +22,7 @@
                     <div
                         class="flex items-center gap-(--space-sm) text-sm mb-(--space-sm)"
                     >
-                        <span class="min-w-[50px]">{tech.name}</span>
+                        <span class="w-[72px] shrink-0">{tech.name}</span>
                         <div
                             class="flex-1 h-2 bg-bg-input rounded overflow-hidden"
                         >
@@ -32,7 +32,7 @@
                             ></div>
                         </div>
                         <span
-                            class="min-w-[30px] text-right text-text-secondary text-xs"
+                            class="w-[48px] shrink-0 text-right text-text-secondary text-xs"
                             >{tech.percent}%</span
                         >
                     </div>
