@@ -25,77 +25,33 @@
 
 <svelte:body use:spotlight />
 
-<main class="dashboard-container">
+<main
+  class="flex gap-(--space-md) w-full items-start max-w-(--layout-max-width) max-[900px]:flex-col"
+>
   <!-- Left Panel: Profile, Stats, Stack -->
-  <div class="left-panel glass-panel">
+  <div
+    class="glass-panel flex-none w-(--layout-golden-ratio-left) flex flex-col gap-(--space-lg) p-(--space-lg) max-h-[calc(100vh-120px)] overflow-y-auto max-[900px]:flex-none max-[900px]:w-full max-[900px]:max-h-none max-[900px]:overflow-visible"
+  >
     <div class="profile-section">
       <!-- Profile is always rendered (static), status is async -->
       <ProfileCard username={staticUser.username} {quote} {status} />
     </div>
 
-    <div class="stats-section">
+    <div class="flex flex-col gap-(--space-sm)">
       <h3>Contribution Activity</h3>
       <Heatmap />
     </div>
 
-    <div class="stack-section">
+    <div class="flex flex-col gap-(--space-sm)">
       <TechStack />
     </div>
   </div>
 
   <!-- Right Panel: Activity Feed -->
-  <div class="right-panel glass-panel">
+  <div
+    class="glass-panel flex-1 p-(--space-lg) min-h-[600px] max-h-[calc(100vh-120px)] overflow-y-auto max-[900px]:flex-none max-[900px]:w-full max-[900px]:max-h-none max-[900px]:overflow-visible"
+  >
     <h3>Latest Activity</h3>
     <ActivityFeed />
   </div>
 </main>
-
-<style>
-  .dashboard-container {
-    display: flex;
-    gap: var(--space-md);
-    max-width: var(--layout-max-width);
-    width: 100%;
-    align-items: flex-start;
-  }
-
-  .left-panel {
-    flex: 0 0 var(--layout-golden-ratio-left);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-lg);
-    padding: var(--space-lg);
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
-  }
-
-  .right-panel {
-    flex: 1;
-    padding: var(--space-lg);
-    min-height: 600px;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
-  }
-
-  .stats-section,
-  .stack-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-  }
-
-  /* Responsive */
-  @media (max-width: 900px) {
-    .dashboard-container {
-      flex-direction: column;
-    }
-
-    .left-panel,
-    .right-panel {
-      flex: none;
-      width: 100%;
-      max-height: none;
-      overflow-y: visible;
-    }
-  }
-</style>

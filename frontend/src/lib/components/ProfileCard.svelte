@@ -11,25 +11,30 @@
     let imageLoaded = false;
 </script>
 
-<div class="profile-card">
-    <div class="avatar-container">
+<div
+    class="h-full p-(--space-lg) flex flex-col items-center text-center gap-(--space-sm)"
+>
+    <div class="relative w-20 h-20">
         <!-- Skeleton Avatar (Visible until loaded) -->
         {#if !imageLoaded}
-            <div class="skeleton avatar-sk"></div>
+            <div
+                class="skeleton w-full h-full rounded-full border-2 border-border box-border"
+            ></div>
         {/if}
 
         <!-- Real Avatar (Hidden until loaded) -->
         <img
             src="/avatar.webp"
             alt={username}
-            class="avatar-img"
-            class:hidden={!imageLoaded}
+            class="w-full h-full rounded-full border-2 border-border object-cover transition-opacity duration-300 {imageLoaded
+                ? 'opacity-100 relative'
+                : 'opacity-0 absolute top-0 left-0'}"
             on:load={() => (imageLoaded = true)}
         />
 
         {#if status}
             <div
-                class="status-dot"
+                class="absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-bg-base transition-[background-color,box-shadow] duration-300"
                 style="background-color: {status.color}; box-shadow: {status.pulse
                     ? `0 0 8px ${status.color}`
                     : 'none'}"
@@ -37,121 +42,35 @@
             ></div>
         {:else}
             <!-- Status Skeleton -->
-            <div class="status-dot skeleton status-sk"></div>
+            <div
+                class="absolute bottom-0 right-0 w-4 h-4 rounded-full! border-2 border-bg-base skeleton"
+            ></div>
         {/if}
     </div>
 
-    <h2>{username}</h2>
+    <h2 class="font-semibold text-text-primary m-0">{username}</h2>
 
     {#if quote}
-        <p class="quote-text">{quote}</p>
+        <p
+            class="my-1 text-sm min-h-[21px] leading-relaxed m-0 text-text-secondary"
+        >
+            {quote}
+        </p>
     {:else}
         <!-- Quote Skeleton -->
-        <div class="skeleton text-sk"></div>
+        <div
+            class="skeleton w-[180px] h-3.5 my-1 py-[3.5px] content-box bg-clip-content"
+        ></div>
     {/if}
 
-    <div class="social-links">
-        <button class="icon-btn">GitHub</button>
-        <button class="icon-btn">HomePage</button>
+    <div class="mt-auto flex gap-(--space-sm)">
+        <button
+            class="px-4 py-2 rounded-xl bg-bg-input text-text-secondary border-none cursor-pointer transition-all hover:bg-bg-hover hover:text-text-primary"
+            >GitHub</button
+        >
+        <button
+            class="px-4 py-2 rounded-xl bg-bg-input text-text-secondary border-none cursor-pointer transition-all hover:bg-bg-hover hover:text-text-primary"
+            >HomePage</button
+        >
     </div>
 </div>
-
-<style>
-    .profile-card {
-        height: 100%;
-        padding: var(--space-lg);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: var(--space-sm);
-    }
-
-    .avatar-container {
-        position: relative;
-        width: var(--layout-avatar-size);
-        height: var(--layout-avatar-size);
-    }
-
-    .avatar-sk {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 2px solid var(--color-border); /* Match border of real img */
-        box-sizing: border-box;
-    }
-
-    .avatar-img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 2px solid var(--color-border);
-        object-fit: cover;
-        transition: opacity 0.3s ease;
-    }
-
-    .avatar-img.hidden {
-        opacity: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-
-    .status-dot {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        border: 2px solid var(--color-bg-base);
-        transition:
-            background-color 0.3s,
-            box-shadow 0.3s;
-    }
-
-    .status-sk {
-        border-color: transparent;
-        color: black;
-    }
-
-    /* Fix Jitter: Ensure text and skeleton occupy exactly same height */
-    .quote-text {
-        margin: 4px 0;
-        line-height: 1.5;
-        font-size: 14px; /* Explicit size */
-        min-height: 21px; /* 14px * 1.5 = 21px */
-    }
-
-    .text-sk {
-        width: 180px;
-        height: 14px; /* Matches font-size roughly, but we need to match the block height */
-        margin: 4px 0;
-        /* To simulate text line height more accurately, we might want height to match font-size and add margin/padding to match line-height */
-        box-sizing: content-box;
-        padding-top: 3.5px; /* (21 - 14) / 2 approx centering */
-        padding-bottom: 3.5px;
-        background-clip: content-box; /* Only color the content box 14px height */
-    }
-
-    .social-links {
-        margin-top: auto;
-        display: flex;
-        gap: var(--space-sm);
-    }
-
-    .icon-btn {
-        background: rgba(255, 255, 255, 0.05);
-        border: none;
-        color: var(--color-text-secondary);
-        padding: 8px 16px;
-        border-radius: 20px;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .icon-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--color-text-primary);
-    }
-</style>

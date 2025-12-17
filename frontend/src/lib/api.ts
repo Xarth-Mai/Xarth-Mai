@@ -4,7 +4,7 @@ const API_BASE = '/api';
 
 async function fetchJson<T>(endpoint: string): Promise<T> {
     // Simulate network delay
-    await sleep(500);
+    await sleep(2500);
 
     if (mocks[endpoint]) {
         console.log(`[MockAPI] Serving ${endpoint}`);
