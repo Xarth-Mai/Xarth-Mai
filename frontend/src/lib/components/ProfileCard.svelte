@@ -14,11 +14,12 @@
 <div
     class="h-full p-(--space-lg) flex flex-col items-center text-center gap-(--space-sm)"
 >
-    <div class="relative w-20 h-20">
+    <div class="relative w-20 h-20" style="aspect-ratio: 1/1;">
         <!-- Skeleton Avatar (Visible until loaded) -->
         {#if !imageLoaded}
             <div
-                class="skeleton w-full h-full rounded-full border-2 border-border box-border"
+                class="skeleton w-full h-full border-2 border-border box-border"
+                style="border-radius: 50%;"
             ></div>
         {/if}
 
@@ -26,9 +27,10 @@
         <img
             src="/avatar.webp"
             alt={username}
-            class="w-full h-full rounded-full border-2 border-border object-cover transition-opacity duration-300 {imageLoaded
+            class="w-full h-full border-2 border-border object-cover transition-opacity duration-300 {imageLoaded
                 ? 'opacity-100 relative'
                 : 'opacity-0 absolute top-0 left-0'}"
+            style="border-radius: 50%;"
             onload={() => (imageLoaded = true)}
         />
 
