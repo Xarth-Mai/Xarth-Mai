@@ -45,13 +45,11 @@ const mocks: Record<string, any> = {
         levels: Array.from({ length: 140 }, () => Math.floor(Math.random() * 5))
     },
     '/stack': [
-        { name: "Rust", color: "#dea584", percent: 40 },
-        { name: "Svelte", color: "#ff3e00", percent: 30 },
-        { name: "TS", color: "#3178c6", percent: 20 },
-        { name: "Go", color: "#00add8", percent: 10 },
-        { name: "Python", color: "#3178c6", percent: 10 },
-        { name: "JS", color: "#3178c6", percent: 10 },
-        { name: "Kotlin", color: "#3178c6", percent: 10 },
+        { name: "Svelte", color: "#ff3e00", percent: 35.29 },
+        { name: "Rust", color: "#dea584", percent: 28.75 },
+        { name: "TypeScript", color: "#3178c6", percent: 21.22 },
+        { name: "Go", color: "#00add8", percent: 9.82 },
+        { name: "CSS", color: "#563d7c", percent: 4.92 },
     ],
     '/activity': Array.from({ length: 6 }, () => [
         { type: "push", repo: "Xarth-Mai", desc: "Pushed 3 commits to main", time: "2h ago" },
