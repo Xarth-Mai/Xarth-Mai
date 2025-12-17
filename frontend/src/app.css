@@ -56,10 +56,11 @@
 /* Global Styles */
 body {
   background-color: var(--color-bg-base);
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 107, 0, 0.15), transparent),
-    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(120, 80, 200, 0.08), transparent),
-    radial-gradient(ellipse 50% 30% at 10% 80%, rgba(0, 150, 200, 0.06), transparent);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/bg.webp');
+  background-size: 100% 100%;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--color-text-primary);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   margin: 0;
@@ -70,6 +71,7 @@ body {
   padding: 40px 20px;
   position: relative;
   overflow-x: hidden;
+  overflow: hidden;
 }
 
 /* Global Spotlight (Injected by action) */
@@ -175,4 +177,12 @@ p {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
   border-radius: 4px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/bg_m.webp');
+    overflow: auto;
+  }
 }
