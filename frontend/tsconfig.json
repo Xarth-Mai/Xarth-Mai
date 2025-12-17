@@ -1,9 +1,9 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ESNext",
     "lib": [
-      "ES2023",
+      "ESNext",
       "DOM",
       "DOM.Iterable"
     ],
