@@ -1,21 +1,22 @@
 import { defineConfig } from 'vite'
-import { svelte } from '@sveltejs/vite-plugin-svelte';
-import tailwindcss from '@tailwindcss/vite';
+import { svelte } from '@sveltejs/vite-plugin-svelte'
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [tailwindcss(), svelte()],
-  css: {
-    transformer: 'lightningcss',
-  },
   build: {
     outDir: '../dist',
     emptyOutDir: true,
     target: 'esnext',
-    modulePreload: {
-      polyfill: false
-    },
+    modulePreload: { polyfill: false },
     minify: 'oxc',
-    cssMinify: 'lightningcss',
+    rollupOptions: {
+      output: {
+        advancedChunks: {
+          groups: [{ name: 'svelte', test: /\/svelte/ }]
+        }
+      }
+    }
   }
 })

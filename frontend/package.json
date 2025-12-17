@@ -7,9 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check:tsc": "svelte-check --tsconfig ./tsconfig.json && tsc -p tsconfig.json",
-    "check:tsgo": "tsgo --noEmit",
-    "check": "bun run check:tsgo"
+    "check": "tsgo --noEmit"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
@@ -17,9 +15,6 @@
     "@tsconfig/svelte": "^5.0.6",
     "@types/node": "^24.10.1",
     "@typescript/native-preview": "^7.0.0-dev.20251216.1",
-    "autoprefixer": "^10.4.23",
-    "lightningcss": "^1.30.2",
-    "postcss": "^8.5.6",
     "svelte": "^5.43.8",
     "svelte-check": "^4.3.4",
     "tailwindcss": "^4.1.18",
