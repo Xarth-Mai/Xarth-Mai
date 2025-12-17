@@ -64,13 +64,17 @@
     {/if}
 
     <div class="mt-auto flex gap-(--space-sm)">
-        <button
-            class="px-4 py-2 rounded-xl bg-bg-input text-text-secondary border-none cursor-pointer transition-all hover:bg-bg-hover hover:text-text-primary"
-            >GitHub</button
+        <a
+            href="https://github.com/Xarth-Mai/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 rounded-xl bg-bg-input text-text-secondary no-underline cursor-pointer transition-all hover:bg-bg-hover hover:text-text-primary"
+            >GitHub</a
         >
-        <button
-            class="px-4 py-2 rounded-xl bg-bg-input text-text-secondary border-none cursor-pointer transition-all hover:bg-bg-hover hover:text-text-primary"
-            >HomePage</button
+        <a
+            href="/fightingGame"
+            class="px-4 py-2 rounded-xl bg-bg-input text-text-secondary no-underline cursor-pointer transition-all hover:bg-bg-hover hover:text-text-primary"
+            >FightingGame</a
         >
     </div>
 </div>
