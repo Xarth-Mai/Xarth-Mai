@@ -9,18 +9,38 @@
     });
 </script>
 
-<div class="activity-wrapper">
+<div class="relative">
     <!-- Real Content with CSS grid transition -->
-    <ul class="activity-list real-content" class:open={activities.length > 0}>
-        <div class="inner">
+    <ul
+        class="list-none p-0 mt-(--space-md) grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out"
+        class:grid-rows-[1fr]={activities.length > 0}
+    >
+        <div class="min-h-0">
             {#each activities as activity}
-                <li class="activity-item">
-                    <div class="icon-box type-{activity.type}"></div>
-                    <div class="content">
-                        <div class="repo">{activity.repo}</div>
-                        <div class="desc">{activity.desc}</div>
+                <li
+                    class="flex items-center gap-(--space-md) py-(--space-sm) border-b border-border last:border-b-0"
+                >
+                    <div
+                        class="w-9 h-9 rounded-sm bg-bg-hover border box-border
+                         {activity.type === 'push'
+                            ? 'border-accent-primary'
+                            : activity.type === 'pr'
+                              ? 'border-[#a855f7]'
+                              : 'border-[#eab308]'}"
+                    ></div>
+                    <div class="grow min-w-0">
+                        <div class="font-medium text-sm text-text-primary">
+                            {activity.repo}
+                        </div>
+                        <div
+                            class="text-[13px] text-text-secondary whitespace-normal wrap-break-word"
+                        >
+                            {activity.desc}
+                        </div>
                     </div>
-                    <div class="time">{activity.time}</div>
+                    <div class="text-xs text-text-secondary">
+                        {activity.time}
+                    </div>
                 </li>
             {/each}
         </div>
@@ -28,17 +48,21 @@
 
     <!-- Skeleton (only visible when empty) -->
     {#if activities.length === 0}
-        <ul class="activity-list skeleton-list">
+        <ul class="list-none p-0 mt-(--space-md) absolute top-0 left-0 right-0">
             {#each Array(9) as _}
-                <li class="activity-item">
-                    <div class="icon-box skeleton"></div>
-                    <div class="content">
+                <li
+                    class="flex items-center gap-(--space-md) py-(--space-sm) border-b border-border last:border-b-0"
+                >
+                    <div
+                        class="w-9 h-9 rounded-sm bg-bg-hover skeleton border-0"
+                    ></div>
+                    <div class="grow min-w-0">
                         <div
-                            class="title skeleton"
-                            style="width: 60%; height: 16px; margin-bottom: 8px;"
+                            class="skeleton mb-2"
+                            style="width: 60%; height: 16px;"
                         ></div>
                         <div
-                            class="desc skeleton"
+                            class="skeleton"
                             style="width: 80%; height: 12px;"
                         ></div>
                     </div>
@@ -47,88 +71,3 @@
         </ul>
     {/if}
 </div>
-
-<style>
-    .activity-wrapper {
-        position: relative;
-    }
-
-    .activity-list {
-        list-style: none;
-        padding: 0;
-        margin: var(--space-md) 0 0 0;
-    }
-
-    /* CSS Grid Height Transition */
-    .real-content {
-        display: grid;
-        grid-template-rows: 0fr;
-        transition: grid-template-rows 0.5s ease-out;
-    }
-
-    .real-content.open {
-        grid-template-rows: 1fr;
-    }
-
-    .inner {
-        min-height: 0;
-    }
-
-    .skeleton-list {
-        /* Position absolutely so it doesn't affect layout when real content loads */
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-    }
-
-    .activity-item {
-        display: flex;
-        align-items: center;
-        gap: var(--space-md);
-        padding: var(--space-sm) 0;
-        border-bottom: 1px solid var(--color-border);
-    }
-
-    .activity-item:last-child {
-        border-bottom: none;
-    }
-
-    .icon-box {
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    /* Just color coding types for now, icons later */
-    .type-push {
-        border: 1px solid var(--color-accent-primary);
-    }
-    .type-pr {
-        border: 1px solid #a855f7;
-    }
-    .type-star {
-        border: 1px solid #eab308;
-    }
-
-    .content {
-        flex-grow: 1;
-        min-width: 0; /* Critical for text wrapping in flex container */
-    }
-    .repo {
-        font-weight: 500;
-        font-size: 14px;
-        color: var(--color-text-primary);
-    }
-    .desc {
-        font-size: 13px;
-        color: var(--color-text-secondary);
-        white-space: normal;
-        overflow-wrap: break-word;
-    }
-    .time {
-        font-size: 12px;
-        color: var(--color-text-secondary);
-    }
-</style>

@@ -8,23 +8,13 @@
   <title>Xarth-Mai</title>
   <link rel="preload" as="image" href="/bg.webp" />
   <style>
-    /* Critical CSS extracted from app.css and App.svelte */
+    /* Critical CSS for First Paint */
     :root {
-      --color-frame-bg: #050505;
-      --color-frame-card: rgba(30, 30, 30, 0.5);
-      --space-sm: 12px;
-      --space-md: 16px;
-      --space-lg: 24px;
-      --radius-lg: 24px;
-      --layout-max-width: 1500px;
-      --layout-golden-ratio-left: 38.2%;
-      --effect-glass: blur(12px);
-      --color-border: rgba(255, 255, 255, 0.08);
-      --effect-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+      --color-bg-base: #050505;
     }
 
     body {
-      background-color: var(--color-frame-bg);
+      background-color: var(--color-bg-base);
       margin: 0;
       display: flex;
       justify-content: center;
@@ -39,111 +29,20 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      /* Fallback */
       height: 100lvh;
-      /* Modern mobile browsers */
       z-index: -1;
       pointer-events: none;
-      background-color: var(--color-frame-bg);
+      background-color: var(--color-bg-base);
       background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/bg.webp');
       background-size: cover;
-      /* CHANGED to cover to ensure no whitespace on resize */
       background-position: center;
       background-repeat: no-repeat;
-    }
-
-    #app-shell {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      padding: 40px 20px;
-      box-sizing: border-box;
-      transition: opacity 0.5s ease-out;
-    }
-
-    #app-shell.fade-out {
-      opacity: 0;
-      pointer-events: none;
     }
 
     #app {
       width: 100%;
       display: flex;
       justify-content: center;
-    }
-
-    /* Layout */
-    .dashboard-container {
-      display: flex;
-      gap: var(--space-md);
-      max-width: var(--layout-max-width);
-      width: 100%;
-      align-items: flex-start;
-      margin: 0 auto;
-      box-sizing: border-box;
-    }
-
-    .left-panel,
-    .right-panel {
-      background: var(--color-frame-card);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      backdrop-filter: var(--effect-glass);
-      box-shadow: var(--effect-shadow-card);
-      padding: var(--space-lg);
-      box-sizing: border-box;
-    }
-
-    .left-panel {
-      flex: 0 0 var(--layout-golden-ratio-left);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-lg);
-      max-height: calc(100vh - 120px);
-      overflow: hidden;
-    }
-
-    .right-panel {
-      flex: 1;
-      min-height: 600px;
-      max-height: calc(100vh - 120px);
-      overflow: hidden;
-    }
-
-    /* Skeleton Animation */
-    @keyframes shimmer {
-      0% {
-        background-position: -200% 0;
-      }
-
-      100% {
-        background-position: 200% 0;
-      }
-    }
-
-    .skeleton {
-      background: linear-gradient(90deg,
-          rgba(255, 255, 255, 0.05) 25%,
-          rgba(255, 255, 255, 0.1) 50%,
-          rgba(255, 255, 255, 0.05) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite linear;
-      border-radius: 8px;
-    }
-
-    @media (max-width: 900px) {
-      .dashboard-container {
-        flex-direction: column;
-      }
-
-      .left-panel,
-      .right-panel {
-        flex: none;
-        width: 100%;
-        max-height: none;
-      }
     }
 
     @media (max-width: 768px) {
@@ -156,20 +55,6 @@
 
 <body>
   <div id="wallpaper"></div>
-  <!-- App Shell Overlay -->
-  <div id="app-shell">
-    <main class="dashboard-container">
-      <div class="left-panel">
-        <div class="skeleton" style="height: 250px; width: 100%;"></div>
-        <div class="skeleton" style="height: 230px; width: 100%;"></div>
-        <div class="skeleton" style="height: 190px; width: 100%;"></div>
-      </div>
-      <div class="right-panel">
-        <div class="skeleton" style="height: 40px; width: 200px; margin-bottom: 24px;"></div>
-        <div class="skeleton" style="height: 470px; width: 100%; margin-bottom: 16px;"></div>
-      </div>
-    </main>
-  </div>
 
   <div id="app"></div>
   <script type="module" src="/src/main.ts"></script>

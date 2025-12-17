@@ -1,30 +1,25 @@
-:root {
-  /* --- DESIGN TOKENS --- */
+@import "tailwindcss";
 
-  /* Colors: Backgrounds */
+@theme {
+  /* Colors */
   --color-bg-base: #050505;
   --color-bg-card: rgba(30, 30, 30, 0.5);
   --color-bg-input: rgba(255, 255, 255, 0.05);
   --color-bg-hover: rgba(255, 255, 255, 0.1);
 
-  /* Colors: Text */
   --color-text-primary: #e5e5e5;
   --color-text-secondary: #737373;
   --color-text-muted: #525252;
 
-  /* Colors: Accents */
   --color-accent-primary: #a78bfa;
-  /* Soft Purple */
   --color-accent-secondary: #f472b6;
-  /* Pink */
   --color-accent-dim: rgba(167, 139, 250, 0.15);
-  /* Dim Purple */
 
-  /* Colors: Borders */
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-hover: rgba(167, 139, 250, 0.3);
 
-  /* Spacing System */
+  /* Spacing */
+  --space-2xs: 4px;
   --space-xs: 8px;
   --space-sm: 12px;
   --space-md: 16px;
@@ -33,6 +28,7 @@
   --space-2xl: 48px;
 
   /* Radius */
+  --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
@@ -40,17 +36,17 @@
 
   /* Effects */
   --effect-glass: blur(12px);
-  --effect-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-  --effect-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
-
-  /* Transitions */
-  --transition-fast: 0.2s ease;
-  --transition-normal: 0.3s ease;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
 
   /* Layout */
   --layout-max-width: 1500px;
   --layout-golden-ratio-left: 38.2%;
   --layout-avatar-size: 80px;
+
+  /* Transitions */
+  --ease-fast: 0.2s ease;
+  --ease-normal: 0.3s ease;
 }
 
 /* Global Styles */
@@ -63,50 +59,27 @@ body {
   background-repeat: no-repeat;
   color: var(--color-text-primary);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding: 40px 20px;
-  position: relative;
-  overflow-x: hidden;
-  overflow: hidden;
+  @apply m-0 flex justify-center items-start min-h-screen p-10 px-5 relative overflow-x-hidden overflow-hidden;
 }
 
-/* Global Spotlight (Injected by action) */
+/* Global Spotlight */
 .spotlight-glow {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 700px;
-  /* Larger */
-  height: 700px;
-  background: radial-gradient(circle,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(167, 139, 250, 0.05) 30%,
-      transparent 70%);
+  @apply fixed top-0 left-0 w-[700px] h-[700px] pointer-events-none z-9999;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(167, 139, 250, 0.05) 30%, transparent 70%);
   transform: translate(-50%, -50%);
   margin-top: -350px;
   margin-left: -350px;
-  pointer-events: none;
-  z-index: 9999;
   mix-blend-mode: screen;
-  /* Brighter than overlay */
   filter: blur(200px);
-  /* Softer */
 }
 
 /* Noise/Texture Overlay */
 body::before {
   content: '';
-  position: fixed;
-  inset: 0;
+  @apply fixed inset-0 pointer-events-none -z-10;
   background:
     radial-gradient(circle at 20% 20%, rgba(255, 107, 0, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(120, 80, 200, 0.03) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: -1;
 }
 
 /* Scrollbar */
@@ -120,7 +93,7 @@ body::before {
 
 ::-webkit-scrollbar-thumb {
   background: #333;
-  border-radius: 4px;
+  @apply rounded-xs;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -133,11 +106,9 @@ body::before {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   backdrop-filter: var(--effect-glass);
-  box-shadow: var(--effect-shadow-card);
-  transition: transform var(--transition-fast), border-color var(--transition-fast);
-  position: relative;
-  overflow: hidden;
-  box-sizing: border-box;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--ease-fast), border-color var(--ease-fast);
+  @apply relative overflow-hidden box-border;
 }
 
 .glass-panel:hover {
@@ -148,17 +119,14 @@ body::before {
 h1,
 h2,
 h3 {
-  margin: 0;
-  font-weight: 600;
-  color: var(--color-text-primary);
+  @apply m-0 font-semibold text-text-primary;
 }
 
 p {
-  margin: 0;
-  color: var(--color-text-secondary);
+  @apply m-0 text-text-secondary;
 }
 
-/* App Skeleton Loading Animation */
+/* Shimmer Animation */
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -176,13 +144,13 @@ p {
       rgba(255, 255, 255, 0.05) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
-  border-radius: 4px;
+  @apply rounded-xs;
 }
 
 /* Mobile */
 @media (max-width: 768px) {
   body {
     background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/bg_m.webp');
-    overflow: auto;
+    @apply overflow-auto;
   }
 }
