@@ -108,7 +108,7 @@ body::before {
   backdrop-filter: var(--effect-glass);
   box-shadow: var(--shadow-card);
   transition: transform var(--ease-fast), border-color var(--ease-fast);
-  @apply relative overflow-hidden box-border;
+  @apply relative box-border;
 }
 
 .glass-panel:hover {
@@ -148,7 +148,7 @@ p {
 }
 
 /* Mobile */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   body {
     background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/bg_m.webp');
     @apply overflow-auto;
