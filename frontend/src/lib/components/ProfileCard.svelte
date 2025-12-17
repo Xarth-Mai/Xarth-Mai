@@ -1,14 +1,14 @@
 <script lang="ts">
     import type { UserStatus } from "../types";
 
-    // Static Props
-    export let username: string = "";
-    export let quote: string = "";
+    interface Props {
+        username?: string;
+        quote?: string;
+        status?: UserStatus | null;
+    }
 
-    // Dynamic Status Prop
-    export let status: UserStatus | null = null;
-
-    let imageLoaded = false;
+    let { username = "", quote = "", status = null }: Props = $props();
+    let imageLoaded = $state(false);
 </script>
 
 <div
@@ -29,7 +29,7 @@
             class="w-full h-full rounded-full border-2 border-border object-cover transition-opacity duration-300 {imageLoaded
                 ? 'opacity-100 relative'
                 : 'opacity-0 absolute top-0 left-0'}"
-            on:load={() => (imageLoaded = true)}
+            onload={() => (imageLoaded = true)}
         />
 
         {#if status}
