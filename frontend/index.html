@@ -25,11 +25,6 @@
 
     body {
       background-color: var(--color-frame-bg);
-      background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/bg.webp');
-      background-size: 100% 100%;
-      background-position: center;
-      background-attachment: fixed;
-      background-repeat: no-repeat;
       margin: 0;
       display: flex;
       justify-content: center;
@@ -38,11 +33,29 @@
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
 
+    #wallpaper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      /* Fallback */
+      height: 100lvh;
+      /* Modern mobile browsers */
+      z-index: -1;
+      pointer-events: none;
+      background-color: var(--color-frame-bg);
+      background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/bg.webp');
+      background-size: cover;
+      /* CHANGED to cover to ensure no whitespace on resize */
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
     #app-shell {
       position: fixed;
       inset: 0;
       z-index: 9999;
-      /* background-color removed to show body background */
       display: flex;
       justify-content: center;
       padding: 40px 20px;
@@ -134,7 +147,7 @@
     }
 
     @media (max-width: 768px) {
-      body {
+      #wallpaper {
         background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/bg_m.webp');
       }
     }
@@ -142,6 +155,7 @@
 </head>
 
 <body>
+  <div id="wallpaper"></div>
   <!-- App Shell Overlay -->
   <div id="app-shell">
     <main class="dashboard-container">
