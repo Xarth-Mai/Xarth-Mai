@@ -48,7 +48,7 @@
 
     <!-- Skeleton (only visible when empty) -->
     {#if activities.length === 0}
-        <ul class="list-none p-0 mt-(--space-md) absolute top-0 left-0 right-0">
+        <ul class="list-none p-0 absolute top-0 left-0 right-0">
             {#each Array(9) as _}
                 <li
                     class="flex items-center gap-(--space-md) py-(--space-sm) border-b border-border last:border-b-0"
@@ -58,7 +58,7 @@
                     ></div>
                     <div class="grow min-w-0">
                         <div
-                            class="skeleton mb-2"
+                            class="skeleton mb-1"
                             style="width: 60%; height: 16px;"
                         ></div>
                         <div
@@ -66,6 +66,10 @@
                             style="width: 80%; height: 12px;"
                         ></div>
                     </div>
+                    <div
+                        class="skeleton"
+                        style="width: 40px; height: 12px;"
+                    ></div>
                 </li>
             {/each}
         </ul>
