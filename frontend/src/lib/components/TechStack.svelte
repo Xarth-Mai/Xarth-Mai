@@ -1,12 +1,7 @@
 <script lang="ts">
-    import { api } from "../api";
     import type { TechStackItem } from "../types";
 
-    let stack: TechStackItem[] = $state([]);
-
-    $effect(() => {
-        api.getTechStack().then((data) => (stack = data));
-    });
+    let { stack = [] }: { stack: TechStackItem[] } = $props();
 </script>
 
 <div class="glass-panel h-full p-(--space-lg) flex flex-col gap-(--space-md)">
