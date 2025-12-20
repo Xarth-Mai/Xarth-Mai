@@ -5,7 +5,7 @@
   import ActivityFeed from "./lib/components/ActivityFeed.svelte";
 
   import { api } from "./lib/api";
-  import type { UserStatus } from "./lib/types";
+  import type { DashboardData } from "./lib/types";
 
   import { spotlight } from "./lib/actions/spotlight";
 
@@ -14,12 +14,10 @@
     username: "Xarth",
   };
 
-  let status: UserStatus | null = $state(null);
-  let quote = $state("");
+  let dashboard: DashboardData | null = $state(null);
 
   $effect(() => {
-    api.getStatus().then((data) => (status = data));
-    api.getQuote().then((data) => (quote = data.quote));
+    api.getDashboard().then((data) => (dashboard = data));
   });
 </script>
 
@@ -34,16 +32,20 @@
   >
     <div class="profile-section">
       <!-- Profile is always rendered (static), status is async -->
-      <ProfileCard username={staticUser.username} {quote} {status} />
+      <ProfileCard
+        username={staticUser.username}
+        quote={dashboard?.quote.quote ?? ""}
+        status={dashboard?.status ?? null}
+      />
     </div>
 
     <div class="flex flex-col gap-(--space-sm)">
       <h3>Contribution Activity</h3>
-      <Heatmap />
+      <Heatmap contributions={dashboard?.contributions.levels ?? []} />
     </div>
 
     <div class="flex flex-col gap-(--space-sm)">
-      <TechStack />
+      <TechStack stack={dashboard?.stack ?? []} />
     </div>
   </div>
 
@@ -52,6 +54,6 @@
     class="glass-panel flex-1 p-(--space-lg) min-h-[600px] max-h-[calc(100vh-120px)] overflow-y-auto max-[900px]:flex-none max-[900px]:w-full max-[900px]:max-h-none max-[900px]:overflow-visible"
   >
     <h3>Latest Activity</h3>
-    <ActivityFeed />
+    <ActivityFeed activities={dashboard?.activity ?? []} />
   </div>
 </main>

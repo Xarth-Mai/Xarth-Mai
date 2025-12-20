@@ -1,14 +1,12 @@
-import type { UserStatus, ContributionGrid, TechStackItem, ActivityItem } from './types';
+import type { DashboardData } from './types';
 
 const API_BASE = '/api';
 
 async function fetchJson<T>(endpoint: string): Promise<T> {
-    // Simulate network delay
-    await sleep(2500);
-
-    if (mocks[endpoint]) {
-        console.log(`[MockAPI] Serving ${endpoint}`);
-        return mocks[endpoint] as T;
+    // 集中式 Mock 拦截 (假设在开发环境下使用)
+    if (import.meta.env.DEV && endpoint === '/dashboard') {
+        console.log(`[MockAPI] Serving Aggregated Dashboard`);
+        return mockDashboard as unknown as T;
     }
 
     const response = await fetch(`${API_BASE}${endpoint}`);
@@ -19,45 +17,33 @@ async function fetchJson<T>(endpoint: string): Promise<T> {
 }
 
 export const api = {
-    getStatus: () => fetchJson<UserStatus>('/status'),
-
-    getQuote: () => fetchJson<{ quote: string }>('/quote'),
-
-    getContributions: () => fetchJson<ContributionGrid>('/contributions'),
-
-    getTechStack: () => fetchJson<TechStackItem[]>('/stack'),
-
-    getActivityFeed: () => fetchJson<ActivityItem[]>('/activity'),
+    // 唯一的入口
+    getDashboard: () => fetchJson<DashboardData>('/dashboard'),
 };
 
-
-// Mock Data
-const mocks: Record<string, any> = {
-    '/status': {
+// 聚合的 Mock Data
+const mockDashboard: DashboardData = {
+    status: {
         label: "Coding",
-        color: "#a78bfa", // Purple accent
+        color: "#a78bfa",
         pulse: true
     },
-    '/quote': {
+    quote: {
         quote: "Stay hungry, stay foolish."
     },
-    '/contributions': {
+    contributions: {
         levels: Array.from({ length: 140 }, () => Math.floor(Math.random() * 5))
     },
-    '/stack': [
+    stack: [
         { name: "Svelte", color: "#ff3e00", percent: 35.29 },
         { name: "Rust", color: "#dea584", percent: 28.75 },
         { name: "TypeScript", color: "#3178c6", percent: 21.22 },
         { name: "Go", color: "#00add8", percent: 9.82 },
         { name: "CSS", color: "#563d7c", percent: 4.92 },
     ],
-    '/activity': Array.from({ length: 6 }, () => [
+    activity: [
         { type: "push", repo: "Xarth-Mai", desc: "Pushed 3 commits to main", time: "2h ago" },
         { type: "pr", repo: "svelte", desc: "Opened PR #1042: Fix flicker", time: "5h ago" },
         { type: "star", repo: "bun", desc: "Starred jarred/bun", time: "1d ago" },
-    ]).flat()
+    ]
 };
-
-async function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}

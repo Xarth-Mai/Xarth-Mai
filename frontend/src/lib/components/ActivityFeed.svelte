@@ -1,12 +1,7 @@
 <script lang="ts">
-    import { api } from "../api";
     import type { ActivityItem } from "../types";
 
-    let activities: ActivityItem[] = $state([]);
-
-    $effect(() => {
-        api.getActivityFeed().then((data) => (activities = data));
-    });
+    let { activities = [] }: { activities: ActivityItem[] } = $props();
 </script>
 
 <div class="relative">

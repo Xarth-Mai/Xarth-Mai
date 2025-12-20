@@ -1,11 +1,5 @@
 <script lang="ts">
-    import { api } from "../api";
-
-    let contributions: number[] = $state([]);
-
-    $effect(() => {
-        api.getContributions().then((data) => (contributions = data.levels));
-    });
+    let { contributions = [] }: { contributions: number[] } = $props();
 
     function getLevelClass(level: number) {
         switch (level) {

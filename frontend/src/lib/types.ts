@@ -24,3 +24,11 @@ export interface ActivityItem {
     desc: string;
     time: string;
 }
+
+export interface DashboardData {
+    status: UserStatus;
+    quote: { quote: string };
+    contributions: ContributionGrid;
+    stack: TechStackItem[];
+    activity: ActivityItem[];
+}
