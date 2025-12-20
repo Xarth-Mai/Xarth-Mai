@@ -1,7 +1,5 @@
 ---
 trigger: always_on
-glob:
-description:
 ---
 
 # Project Development Protocols
