@@ -73,10 +73,5 @@
             class="px-4 py-2 rounded-xl bg-bg-input text-text-secondary no-underline cursor-pointer transition-all hover:bg-bg-hover hover:text-text-primary"
             >GitHub</a
         >
-        <a
-            href="/fightingGame"
-            class="px-4 py-2 rounded-xl bg-bg-input text-text-secondary no-underline cursor-pointer transition-all hover:bg-bg-hover hover:text-text-primary"
-            >FightingGame</a
-        >
     </div>
 </div>

@@ -10,11 +10,6 @@ bun install
 bun run build
 cd ..
 
-echo "==> Building fightingGame..."
-mkdir -p dist/fightingGame
-cp -r fightingGame dist/
-bun build fightingGame/index.js --outfile=dist/fightingGame/index.js --minify
-
 echo "==> Building backend..."
 cd backend
 go build -o ../Xarth-Mai .
