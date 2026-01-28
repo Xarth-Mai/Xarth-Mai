@@ -3,8 +3,8 @@ import type { DashboardData } from './types';
 const API_BASE = '/api';
 
 async function fetchJson<T>(endpoint: string): Promise<T> {
-    // 集中式 Mock 拦截 (假设在开发环境下使用)
-    if (import.meta.env.DEV && endpoint === '/dashboard') {
+    // 集中式 Mock 拦截
+    if (endpoint === '/dashboard') {
         console.log(`[MockAPI] Serving Aggregated Dashboard`);
         return mockDashboard as unknown as T;
     }
