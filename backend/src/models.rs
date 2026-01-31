@@ -51,13 +51,7 @@ pub struct DashboardData {
     pub activity: Vec<ActivityItem>,
 }
 
-// GitHub REST API Models
-#[derive(Debug, Deserialize)]
-pub struct GithubRepo {
-    pub language: Option<String>,
-    pub fork: bool,
-}
-
+// GitHub Event Models
 #[derive(Debug, Deserialize)]
 pub struct GithubEvent {
     pub r#type: String,

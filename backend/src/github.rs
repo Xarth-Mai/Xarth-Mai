@@ -38,17 +38,17 @@ impl GithubClient {
     pub async fn fetch_dashboard_data(
         &self,
     ) -> Result<DashboardData, Box<dyn std::error::Error + Send + Sync>> {
-        let (repos, events, contributions) = tokio::join!(
-            self.fetch_repos(),
+        let (events, contributions, language_stats) = tokio::join!(
             self.fetch_events(),
-            self.fetch_contributions()
+            self.fetch_contributions(),
+            self.fetch_language_stats()
         );
 
-        let repos = repos.unwrap_or_default();
         let events = events.unwrap_or_default();
         let levels = contributions.unwrap_or_else(|_| vec![0; 140]);
+        let lang_stats = language_stats.unwrap_or_default();
 
-        let stack = self.process_stack(&repos);
+        let stack = self.process_stack(&lang_stats);
         let activity = self.process_activity(&events);
 
         let status = if self.has_token {
@@ -76,36 +76,81 @@ impl GithubClient {
         })
     }
 
-    async fn fetch_repos(&self) -> Result<Vec<GithubRepo>, reqwest::Error> {
+    async fn fetch_language_stats(
+        &self,
+    ) -> Result<HashMap<String, u64>, Box<dyn std::error::Error + Send + Sync>> {
         if !self.has_token {
-            return Ok(vec![
-                GithubRepo {
-                    language: Some("Rust".to_string()),
-                    fork: false,
-                },
-                GithubRepo {
-                    language: Some("TypeScript".to_string()),
-                    fork: false,
-                },
-                GithubRepo {
-                    language: Some("Rust".to_string()),
-                    fork: false,
-                },
-                GithubRepo {
-                    language: Some("Go".to_string()),
-                    fork: false,
-                },
-                GithubRepo {
-                    language: Some("Python".to_string()),
-                    fork: false,
-                },
-            ]);
+            let mut mock = HashMap::new();
+            mock.insert("Rust".to_string(), 150000);
+            mock.insert("TypeScript".to_string(), 80000);
+            mock.insert("Svelte".to_string(), 45000);
+            mock.insert("Python".to_string(), 30000);
+            mock.insert("Go".to_string(), 20000);
+            return Ok(mock);
         }
-        let url = format!(
-            "https://api.github.com/users/{}/repos?per_page=100&sort=updated",
-            self.username
-        );
-        self.client.get(url).send().await?.json().await
+
+        // GraphQL query to get language breakdown for all non-fork repos
+        let query = json!({
+            "query": format!(r#"
+                query {{
+                    user(login: "{}") {{
+                        repositories(first: 100, isFork: false, ownerAffiliations: OWNER, orderBy: {{field: UPDATED_AT, direction: DESC}}) {{
+                            nodes {{
+                                languages(first: 10, orderBy: {{field: SIZE, direction: DESC}}) {{
+                                    edges {{
+                                        size
+                                        node {{
+                                            name
+                                            color
+                                        }}
+                                    }}
+                                }}
+                            }}
+                        }}
+                    }}
+                }}
+            "#, self.username)
+        });
+
+        let resp: serde_json::Value = self
+            .client
+            .post("https://api.github.com/graphql")
+            .json(&query)
+            .send()
+            .await?
+            .json()
+            .await?;
+
+        let mut totals: HashMap<String, u64> = HashMap::new();
+
+        if let Some(nodes) = resp
+            .get("data")
+            .and_then(|d| d.get("user"))
+            .and_then(|u| u.get("repositories"))
+            .and_then(|r| r.get("nodes"))
+            .and_then(|n| n.as_array())
+        {
+            for repo in nodes {
+                if let Some(edges) = repo
+                    .get("languages")
+                    .and_then(|l| l.get("edges"))
+                    .and_then(|e| e.as_array())
+                {
+                    for edge in edges {
+                        if let (Some(size), Some(name)) = (
+                            edge.get("size").and_then(|s| s.as_u64()),
+                            edge.get("node")
+                                .and_then(|n| n.get("name"))
+                                .and_then(|n| n.as_str()),
+                        ) {
+                            *totals.entry(name.to_string()).or_insert(0) += size;
+                        }
+                    }
+                }
+            }
+        }
+
+        Ok(totals)
     }
 
     async fn fetch_events(&self) -> Result<Vec<GithubEvent>, reqwest::Error> {
@@ -187,29 +232,19 @@ impl GithubClient {
         Ok(levels)
     }
 
-    fn process_stack(&self, repos: &[GithubRepo]) -> Vec<TechStackItem> {
-        let mut counts = HashMap::new();
-        let mut total = 0;
-
-        for repo in repos {
-            if !repo.fork {
-                if let Some(lang) = &repo.language {
-                    *counts.entry(lang.clone()).or_insert(0) += 1;
-                    total += 1;
-                }
-            }
-        }
+    fn process_stack(&self, lang_stats: &HashMap<String, u64>) -> Vec<TechStackItem> {
+        let total: u64 = lang_stats.values().sum();
 
         if total == 0 {
             return vec![];
         }
 
-        let mut stack: Vec<TechStackItem> = counts
-            .into_iter()
-            .map(|(name, count)| TechStackItem {
+        let mut stack: Vec<TechStackItem> = lang_stats
+            .iter()
+            .map(|(name, &bytes)| TechStackItem {
                 name: name.clone(),
-                color: self.get_color_for_lang(&name),
-                percent: (count as f32 / total as f32) * 100.0,
+                color: self.get_color_for_lang(name),
+                percent: ((bytes as f64 / total as f64) * 100.0 * 10.0).round() as f32 / 10.0,
             })
             .collect();
 
