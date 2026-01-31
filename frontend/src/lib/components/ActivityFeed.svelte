@@ -2,6 +2,13 @@
     import type { ActivityItem } from "../types";
 
     let { activities = [] }: { activities: ActivityItem[] } = $props();
+
+    function getInitial(repo: string) {
+        if (!repo) return "";
+        const parts = repo.split("/");
+        const name = parts[parts.length - 1] || repo;
+        return name.charAt(0).toUpperCase();
+    }
 </script>
 
 <div class="relative">
@@ -16,13 +23,23 @@
                     class="flex items-center gap-(--space-md) py-(--space-sm) border-b border-border last:border-b-0"
                 >
                     <div
-                        class="w-9 h-9 rounded-sm bg-bg-hover border box-border
+                        class="w-9 h-9 rounded-sm bg-bg-hover border box-border flex items-center justify-center font-bold text-sm
                          {activity.type === 'push'
-                            ? 'border-accent-primary'
+                            ? 'border-accent-primary shadow-[0_0_8px_rgba(167,139,250,0.4)]'
                             : activity.type === 'pr'
-                              ? 'border-[#a855f7]'
-                              : 'border-[#eab308]'}"
-                    ></div>
+                              ? 'border-[#a855f7] shadow-[0_0_8px_rgba(168,85,247,0.4)]'
+                              : 'border-[#eab308] shadow-[0_0_8px_rgba(234,179,8,0.4)]'}"
+                    >
+                        <span
+                            class="opacity-50 {activity.type === 'push'
+                                ? 'text-accent-primary [text-shadow:0_0_8px_rgba(167,139,250,0.6)]'
+                                : activity.type === 'pr'
+                                  ? 'text-[#a855f7] [text-shadow:0_0_8px_rgba(168,85,247,0.6)]'
+                                  : 'text-[#eab308] [text-shadow:0_0_8px_rgba(234,179,8,0.6)]'}"
+                        >
+                            {getInitial(activity.repo)}
+                        </span>
+                    </div>
                     <div class="grow min-w-0">
                         <div class="font-medium text-sm text-text-primary">
                             {activity.repo}
