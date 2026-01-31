@@ -1,8 +1,8 @@
 use crate::models::*;
-use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, USER_AGENT};
-use std::collections::HashMap;
 use chrono::{DateTime, Utc};
+use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, USER_AGENT};
 use serde_json::json;
+use std::collections::HashMap;
 
 pub struct GithubClient {
     client: reqwest::Client,
@@ -14,7 +14,7 @@ impl GithubClient {
     pub fn new(username: &str, token: Option<String>) -> Self {
         let mut headers = HeaderMap::new();
         headers.insert(USER_AGENT, HeaderValue::from_static("Xarth-Mai-Backend"));
-        
+
         let mut has_token = false;
         if let Some(t) = token {
             if let Ok(val) = HeaderValue::from_str(&format!("Bearer {}", t)) {
@@ -35,7 +35,9 @@ impl GithubClient {
         }
     }
 
-    pub async fn fetch_dashboard_data(&self) -> Result<DashboardData, Box<dyn std::error::Error + Send + Sync>> {
+    pub async fn fetch_dashboard_data(
+        &self,
+    ) -> Result<DashboardData, Box<dyn std::error::Error + Send + Sync>> {
         let (repos, events, contributions) = tokio::join!(
             self.fetch_repos(),
             self.fetch_events(),
@@ -44,17 +46,27 @@ impl GithubClient {
 
         let repos = repos.unwrap_or_default();
         let events = events.unwrap_or_default();
-        let levels = contributions.unwrap_or_else(|_| vec![0; 20]); // Fallback
+        let levels = contributions.unwrap_or_else(|_| vec![0; 140]);
 
         let stack = self.process_stack(&repos);
         let activity = self.process_activity(&events);
 
-        Ok(DashboardData {
-            status: UserStatus {
+        let status = if self.has_token {
+            UserStatus {
                 label: "Developing".to_string(),
-                color: "#60a5fa".to_string(),
+                color: "#a78bfa".to_string(),
                 pulse: true,
-            },
+            }
+        } else {
+            UserStatus {
+                label: "Demo Mode".to_string(),
+                color: "#94a3b8".to_string(),
+                pulse: false,
+            }
+        };
+
+        Ok(DashboardData {
+            status,
             quote: Quote {
                 quote: "The best way to predict the future is to invent it.".to_string(),
             },
@@ -65,18 +77,58 @@ impl GithubClient {
     }
 
     async fn fetch_repos(&self) -> Result<Vec<GithubRepo>, reqwest::Error> {
-        let url = format!("https://api.github.com/users/{}/repos?per_page=100&sort=updated", self.username);
+        if !self.has_token {
+            return Ok(vec![
+                GithubRepo {
+                    language: Some("Rust".to_string()),
+                    fork: false,
+                },
+                GithubRepo {
+                    language: Some("TypeScript".to_string()),
+                    fork: false,
+                },
+                GithubRepo {
+                    language: Some("Rust".to_string()),
+                    fork: false,
+                },
+                GithubRepo {
+                    language: Some("Go".to_string()),
+                    fork: false,
+                },
+                GithubRepo {
+                    language: Some("Python".to_string()),
+                    fork: false,
+                },
+            ]);
+        }
+        let url = format!(
+            "https://api.github.com/users/{}/repos?per_page=100&sort=updated",
+            self.username
+        );
         self.client.get(url).send().await?.json().await
     }
 
     async fn fetch_events(&self) -> Result<Vec<GithubEvent>, reqwest::Error> {
-        let url = format!("https://api.github.com/users/{}/events?per_page=30", self.username);
+        if !self.has_token {
+            return Ok(vec![]); // Will be processed as empty activity
+        }
+        let url = format!(
+            "https://api.github.com/users/{}/events?per_page=30",
+            self.username
+        );
         self.client.get(url).send().await?.json().await
     }
 
-    async fn fetch_contributions(&self) -> Result<Vec<i32>, Box<dyn std::error::Error + Send + Sync>> {
+    async fn fetch_contributions(
+        &self,
+    ) -> Result<Vec<i32>, Box<dyn std::error::Error + Send + Sync>> {
         if !self.has_token {
-            return Ok(vec![0, 1, 0, 2, 1, 4, 3, 2, 1, 0]); // Mock if no token
+            // Mock 140 days (20 weeks) of contribution levels (0-4)
+            let mut mock_levels = Vec::with_capacity(140);
+            for i in 0..140 {
+                mock_levels.push((i % 5) as i32);
+            }
+            return Ok(mock_levels);
         }
 
         let query = json!({
@@ -97,7 +149,9 @@ impl GithubClient {
             "#, self.username)
         });
 
-        let resp: GqlResponse = self.client.post("https://api.github.com/graphql")
+        let resp: GqlResponse = self
+            .client
+            .post("https://api.github.com/graphql")
             .json(&query)
             .send()
             .await?
@@ -105,7 +159,13 @@ impl GithubClient {
             .await?;
 
         let mut levels = Vec::new();
-        for week in resp.data.user.contributions_collection.contribution_calendar.weeks {
+        for week in resp
+            .data
+            .user
+            .contributions_collection
+            .contribution_calendar
+            .weeks
+        {
             for day in week.contribution_days {
                 let level = match day.contribution_level.as_str() {
                     "NONE" => 0,
@@ -119,11 +179,11 @@ impl GithubClient {
             }
         }
 
-        // Return the last 52 weeks or a specific window for the grid
-        if levels.len() > 100 {
-            levels = levels.split_off(levels.len() - 100);
+        // Return the last 20 weeks (140 days)
+        if levels.len() > 140 {
+            levels = levels.split_off(levels.len() - 140);
         }
-        
+
         Ok(levels)
     }
 
@@ -140,7 +200,9 @@ impl GithubClient {
             }
         }
 
-        if total == 0 { return vec![]; }
+        if total == 0 {
+            return vec![];
+        }
 
         let mut stack: Vec<TechStackItem> = counts
             .into_iter()
@@ -157,45 +219,58 @@ impl GithubClient {
     }
 
     fn process_activity(&self, events: &[GithubEvent]) -> Vec<ActivityItem> {
-        events.iter().filter_map(|e| {
-            let (activity_type, desc) = match e.r#type.as_str() {
-                "PushEvent" => {
-                    let commit_msg = e.payload.commits.as_ref()
-                        .and_then(|c| c.first())
-                        .map(|c| c.message.as_str())
-                        .unwrap_or("Pushed commits");
-                    (ActivityType::Push, commit_msg.to_string())
-                },
-                "PullRequestEvent" => {
-                    let action = e.payload.action.as_deref().unwrap_or("opened");
-                    (ActivityType::Pr, format!("{} a pull request", action))
-                },
-                "WatchEvent" => (ActivityType::Star, "Starred a repository".to_string()),
-                "ForkEvent" => (ActivityType::Fork, "Forked a repository".to_string()),
-                _ => return None,
-            };
-
-            let time = DateTime::parse_from_rfc3339(&e.created_at)
-                .map(|dt| {
-                    let now = Utc::now();
-                    let diff = now.signed_duration_since(dt.with_timezone(&Utc));
-                    if diff.num_days() > 0 {
-                        format!("{}d ago", diff.num_days())
-                    } else if diff.num_hours() > 0 {
-                        format!("{}h ago", diff.num_hours())
-                    } else {
-                        format!("{}m ago", diff.num_minutes())
+        events
+            .iter()
+            .filter_map(|e| {
+                let (activity_type, desc) = match e.r#type.as_str() {
+                    "PushEvent" => {
+                        let commit_msg = e
+                            .payload
+                            .commits
+                            .as_ref()
+                            .and_then(|c| c.first())
+                            .map(|c| c.message.as_str())
+                            .unwrap_or("Pushed commits");
+                        (ActivityType::Push, commit_msg.to_string())
                     }
-                })
-                .unwrap_or_else(|_| "recently".to_string());
+                    "PullRequestEvent" => {
+                        let action = e.payload.action.as_deref().unwrap_or("opened");
+                        (ActivityType::Pr, format!("{} a pull request", action))
+                    }
+                    "WatchEvent" => (ActivityType::Star, "Starred a repository".to_string()),
+                    "ForkEvent" => (ActivityType::Fork, "Forked a repository".to_string()),
+                    _ => return None,
+                };
 
-            Some(ActivityItem {
-                r#type: activity_type,
-                repo: e.repo.name.clone().split('/').last().unwrap_or(&e.repo.name).to_string(),
-                desc,
-                time,
+                let time = DateTime::parse_from_rfc3339(&e.created_at)
+                    .map(|dt| {
+                        let now = Utc::now();
+                        let diff = now.signed_duration_since(dt.with_timezone(&Utc));
+                        if diff.num_days() > 0 {
+                            format!("{}d ago", diff.num_days())
+                        } else if diff.num_hours() > 0 {
+                            format!("{}h ago", diff.num_hours())
+                        } else {
+                            format!("{}m ago", diff.num_minutes())
+                        }
+                    })
+                    .unwrap_or_else(|_| "recently".to_string());
+
+                Some(ActivityItem {
+                    r#type: activity_type,
+                    repo: e
+                        .repo
+                        .name
+                        .clone()
+                        .split('/')
+                        .last()
+                        .unwrap_or(&e.repo.name)
+                        .to_string(),
+                    desc,
+                    time,
+                })
             })
-        }).collect()
+            .collect()
     }
 
     fn get_color_for_lang(&self, lang: &str) -> String {
