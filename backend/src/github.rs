@@ -112,14 +112,43 @@ impl GithubClient {
             "#, self.username)
         });
 
-        let resp: serde_json::Value = self
+        let response = self
             .client
             .post("https://api.github.com/graphql")
             .json(&query)
             .send()
-            .await?
-            .json()
-            .await?;
+            .await
+            .map_err(|e| {
+                eprintln!(
+                    "[GitHub API] GraphQL request failed (language stats): url=https://api.github.com/graphql, error={}",
+                    e
+                );
+                e
+            })?;
+
+        let status = response.status();
+        if !status.is_success() {
+            eprintln!(
+                "[GitHub API] GraphQL returned non-success status (language stats): status={}, user={}",
+                status, self.username
+            );
+        }
+
+        let resp: serde_json::Value = response.json().await.map_err(|e| {
+            eprintln!(
+                "[GitHub API] Failed to parse GraphQL response (language stats): error={}",
+                e
+            );
+            e
+        })?;
+
+        // Check for GraphQL errors in response
+        if let Some(errors) = resp.get("errors") {
+            eprintln!(
+                "[GitHub API] GraphQL response contains errors (language stats): errors={}",
+                errors
+            );
+        }
 
         let mut totals: HashMap<String, u64> = HashMap::new();
 
@@ -161,7 +190,30 @@ impl GithubClient {
             "https://api.github.com/users/{}/events?per_page=30",
             self.username
         );
-        self.client.get(url).send().await?.json().await
+
+        let response = self.client.get(&url).send().await.map_err(|e| {
+            eprintln!(
+                "[GitHub API] Events request failed: url={}, error={}",
+                url, e
+            );
+            e
+        })?;
+
+        let status = response.status();
+        if !status.is_success() {
+            eprintln!(
+                "[GitHub API] Events returned non-success status: url={}, status={}",
+                url, status
+            );
+        }
+
+        response.json().await.map_err(|e| {
+            eprintln!(
+                "[GitHub API] Failed to parse events response: url={}, error={}",
+                url, e
+            );
+            e
+        })
     }
 
     async fn fetch_contributions(
@@ -194,14 +246,35 @@ impl GithubClient {
             "#, self.username)
         });
 
-        let resp: GqlResponse = self
+        let response = self
             .client
             .post("https://api.github.com/graphql")
             .json(&query)
             .send()
-            .await?
-            .json()
-            .await?;
+            .await
+            .map_err(|e| {
+                eprintln!(
+                    "[GitHub API] GraphQL request failed (contributions): url=https://api.github.com/graphql, error={}",
+                    e
+                );
+                e
+            })?;
+
+        let status = response.status();
+        if !status.is_success() {
+            eprintln!(
+                "[GitHub API] GraphQL returned non-success status (contributions): status={}, user={}",
+                status, self.username
+            );
+        }
+
+        let resp: GqlResponse = response.json().await.map_err(|e| {
+            eprintln!(
+                "[GitHub API] Failed to parse GraphQL response (contributions): error={}",
+                e
+            );
+            e
+        })?;
 
         let mut levels = Vec::new();
         for week in resp
