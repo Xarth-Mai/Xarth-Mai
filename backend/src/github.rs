@@ -302,6 +302,9 @@ impl GithubClient {
             levels = levels.split_off(levels.len() - 140);
         }
 
+        // Reverse so newest contributions come first
+        levels.reverse();
+
         Ok(levels)
     }
 
