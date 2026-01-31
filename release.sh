@@ -1,8 +1,10 @@
-#!/usr/bin/env fish
+#!/bin/bash
 
-echo "==> Resetting and pulling..."
-git checkout -- .
-git pull
+# Exit on error
+set -e
+
+echo "==> Cleaning up old builds..."
+rm -rf dist Xarth-Mai release Xarth-Mai-release.tar.gz
 
 echo "==> Building frontend..."
 cd frontend
@@ -12,9 +14,23 @@ cd ..
 
 echo "==> Building backend..."
 cd backend
-go build -o ../Xarth-Mai .
+cargo build --release
+cd ..
 
-echo "==> Restarting service..."
-systemctl restart Xarth-Mai
+echo "==> Preparing release package..."
+mkdir -p release
+cp backend/target/release/xarth-mai-backend release/Xarth-Mai
+cp -r dist release/dist
 
-echo "✓ Deploy completed!"
+echo "==> Creating compressed archive..."
+tar -czvf Xarth-Mai-release.tar.gz -C release .
+
+echo "==> Cleaning up temporary files..."
+rm -rf release
+
+echo "------------------------------------------------"
+echo "✓ Release package created: Xarth-Mai-release.tar.gz"
+echo "  Contents:"
+echo "    - Xarth-Mai (Executable)"
+echo "    - dist/ (Static assets)"
+echo "------------------------------------------------"
